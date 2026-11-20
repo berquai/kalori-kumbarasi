@@ -827,7 +827,10 @@ function render(){
   const st=computeStats(); lastSt=st;
   renderHome(st); renderStats(st); renderBadges(st); renderHistory(st); renderCetvel(); renderSettings(); fillFoodUI(); updatePreviews();
   $('#sync').textContent=backend?.name==='firebase'?(navigator.onLine?'☁️ senkron':'☁️ çevrimdışı'):'📱 yerel';
-  try{ const seen=new Set(JSON.parse(localStorage.getItem(SEEN_KEY)||'[]')); const fresh=badges(st).filter(b=>b.done&&!seen.has(b.id));
+  try{ const bl=badges(st), doneIds=new Set(bl.filter(b=>b.done).map(b=>b.id));
+    const stored=JSON.parse(localStorage.getItem(SEEN_KEY)||'[]'), seen=new Set(stored.filter(id=>doneIds.has(id))); // veriler düzelince geri alınan rozetler "görüldü" listesinden de düşer; gerçekten kazanılınca yeniden kutlanır
+    const fresh=bl.filter(b=>b.done&&!seen.has(b.id));
+    if(seen.size!==stored.length&&!fresh.length) localStorage.setItem(SEEN_KEY,JSON.stringify([...seen]));
     if(fresh.length){ fresh.forEach(b=>seen.add(b.id)); localStorage.setItem(SEEN_KEY,JSON.stringify([...seen]));
       toast(`🏅 Yeni rozet${fresh.length>1?'ler':''}: ${fresh.slice(0,3).map(b=>`${b.e} ${esc(b.n)}`).join(', ')}${fresh.length>3?` +${fresh.length-3}`:''}`,4500); } }catch(e){}
 }
