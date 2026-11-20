@@ -1,0 +1,16 @@
+{
+  "name": "Kalori Kumbarası",
+  "short_name": "Kumbara",
+  "description": "250.000 kcal'lik bir yıllık disiplin kumbarası",
+  "lang": "tr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d1220",
+  "theme_color": "#0d1220",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
