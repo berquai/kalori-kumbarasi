@@ -95,6 +95,11 @@ input:focus,select:focus{outline:2px solid rgba(244,185,66,.6);border-color:tran
 .chip.active{border-color:var(--gold);color:var(--gold)}
 .preview{margin:16px 0 12px;padding:14px;border-radius:14px;background:var(--card2);text-align:center;border:1px solid var(--line)}
 .preview b{font-size:28px;display:block;font-variant-numeric:tabular-nums}
+.fdef .seg{margin:6px 0 4px}
+.fdef .sum{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--notebg);color:var(--notetx);font-size:13.5px;line-height:1.45}
+.fdef .sum.bad{background:rgba(255,107,107,.12);color:var(--red)}
+.fdef .opt{font-size:12px;color:var(--muted);font-weight:500}
+.cvwarn{color:var(--red);font-size:12px;display:block}
 .newfood{border:1px dashed var(--gold);border-radius:14px;padding:4px 12px 12px;margin-top:12px}
 .vit{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line);font-size:14.5px;line-height:1.4}
 .vit:first-child{border-top:0}.vit .e{font-size:24px;line-height:1}
@@ -181,13 +186,9 @@ code{background:var(--card2);padding:2px 6px;border-radius:6px;font-size:12px;wo
         <div class="chips" id="tplChips"></div>
         <div class="chips" id="freqChips"></div>
         <div class="muted small" id="foodInfo" style="margin-top:6px"></div>
-        <div class="newfood" id="newFood" style="display:none">
-          <label style="color:var(--gold)">🆕 Cetvelinde yok, bir kez tanımla, sonra hep hazır olsun</label>
-          <div class="g2"><div><label>kcal / 100 g</label><input name="nk" type="number" step="any" inputmode="decimal" placeholder="örn. 160"></div>
-          <div><label>ya da 1 birim = kcal</label><input name="nuk" type="number" step="any" inputmode="decimal" placeholder="örn. 250"></div></div>
-          <div class="g2"><div><label>Birim adı</label><input name="nu" placeholder="adet, dilim, tabak…"></div>
-          <div><label>1 birim = gram</label><input name="nug" type="number" step="any" inputmode="decimal" placeholder="örn. 200"></div></div>
-          <label>Kaynak (isteğe bağlı)</label><input name="nsrc" placeholder="TürKomp, ambalaj etiketi, link…">
+        <div class="newfood fdef" id="newFood" style="display:none" data-names="nk,nuk,nu,nug,nsrc">
+          <label style="color:var(--gold)">🆕 Bu yiyecek cetvelinde yok. Bir kez tanımla, sonra hep hazır olsun.</label>
+          <div class="fdef-body"></div>
         </div>
         <div class="g2">
           <div><label>Miktar</label><input type="number" name="qty" inputmode="decimal" step="any" min="0" value="1" required></div>
@@ -266,9 +267,7 @@ code{background:var(--card2);padding:2px 6px;border-radius:6px;font-size:12px;wo
         <form id="f-cetvel">
           <input type="hidden" name="orig">
           <label>Ad</label><input name="n" required placeholder="örn. Annemin mantısı">
-          <div class="g2"><div><label>kcal / 100 g</label><input name="k" type="number" step="any" inputmode="decimal"></div><div><label>ya da 1 birim = kcal</label><input name="uk" type="number" step="any" inputmode="decimal"></div></div>
-          <div class="g2"><div><label>Birim adı</label><input name="u" placeholder="tabak"></div><div><label>1 birim = gram</label><input name="ug" type="number" step="any" inputmode="decimal" placeholder="250"></div></div>
-          <label>Kaynak</label><input name="src" placeholder="TürKomp, etiket, link…">
+          <div class="fdef" data-names="k,uk,u,ug,src"><div class="fdef-body"></div></div>
           <div class="g2" style="margin-top:12px"><button class="btn primary">Kaydet</button><button type="button" class="btn ghost" id="cfReset">Temizle</button></div>
         </form>
       </div>
@@ -701,7 +700,7 @@ function renderHistory(st){
     return `<div class="hist-day"><span>${trDate(p.d,{weekday:'long',day:'numeric',month:'long'})}</span>
       <span>${p.closed?`<span class="tag">✅ kapalı</span> <b class="${p.deficit<0?'red':'gold'}">${sgn(p.deficit)}</b>`:`<span class="tag">açık</span> <button class="btn sm primary" data-close="${p.d}">Kapat</button>`}</span></div>
       <div class="muted small" style="margin:0 2px 4px">Harcanan ${fmt(p.burn)} · Alınan ${fmt(p.intakeAdj)}</div>`+
-      list.map(([e,x])=>`<div class="hist"><span class="e">${x.e}</span><span class="t">${esc(x.t)}<small>${esc(x.sub)}</small></span><span class="k ${x.kind==='eat'?'red':x.k<0?'red':'green'}">${x.kind==='eat'?'−':x.k>=0?'+':'−'}${fmt(Math.abs(x.k))}</span><button class="x" data-del="${e.id}">×</button></div>`).join('')+
+      list.map(([e,x])=>`<div class="hist"><span class="e">${x.e}</span><span class="t">${esc(x.t)}<small>${esc(x.sub)}</small></span>${e.type==='eat'&&findFood(e.food)?`<button class="btn sm ghost" data-edit="${esc(e.food)}" title="Cetvelde düzelt">✏️</button>`:''}<span class="k ${x.kind==='eat'?'red':x.k<0?'red':'green'}">${x.kind==='eat'?'−':x.k>=0?'+':'−'}${fmt(Math.abs(x.k))}</span><button class="x" data-del="${e.id}">×</button></div>`).join('')+
       (p.closed?`<div style="text-align:right"><button class="btn sm ghost" data-reopen="${p.d}">Günü yeniden aç</button></div>`:'');
   }).join('');
 }
@@ -710,7 +709,7 @@ function renderCetvel(){
   const own=(state.settings.foods||[]).length;
   $('#cvCount').textContent=`${own} kendi · ${allFoods().length} toplam`;
   $('#cvList').innerHTML=list.map(f=>`<div class="cv"><span class="t">${esc(f.n)} ${f.builtin?'<span class="tag">hazır</span>':''}
-    <small>${f.k100?fmt(f.k100)+' kcal/100 g':''}${f.u&&f.ukc?` · 1 ${esc(f.u)}${f.ug?` (${fmt(f.ug)} g)`:''} = ${fmt(f.ukc)} kcal`:''}${f.src?` · 📎 ${esc(f.src)}`:''}</small></span>
+    <small>${f.k100?'100 g = '+fmt(f.k100)+' kcal':''}${f.u&&f.ukc?`${f.k100?' · ':''}1 ${esc(f.u)}${f.ug?` (${fmt(f.ug)} g)`:''} = ${fmt(f.ukc)} kcal`:''}${f.src?` · 📎 ${esc(f.src)}`:''}</small>${f.u&&isGramWord(f.u)?'<span class="cvwarn">⚠️ Porsiyon adı “gram” olamaz; Düzenle’ye dokunup düzelt.</span>':''}</span>
     <button class="btn sm" data-edit="${esc(f.n)}">Düzenle</button>${f.builtin?'':`<button class="x" data-delfood="${esc(f.n)}">×</button>`}</div>`).join('');
 }
 function renderSettings(){
@@ -888,12 +887,68 @@ function actFields(){ const A=ACTS[$('#actSel').value]; $('#paceBox').style.disp
 const curW=()=>lastSt?lastSt.T.w:state.settings.startWeight;
 function actInput(){ const f=$('#f-activity'),o=fo(f); return {act:o.act,min:num(o.min),pm:num(o.pm),ps:num(o.ps),km:num(o.km),grade:num(o.grade),speed:num(o.speed),met:num(o.met)}; }
 
+/* ---------- yiyecek tanımlama (Ekle formu ve cetvel ortak) ---------- */
+const GRAM_WORDS=['g','gr','gram','gramm','grams'];
+const isGramWord=u=>GRAM_WORDS.includes(lc(u).replace(/\./g,''));
+function fdefInit(box){
+  const [k,uk,u,ug,src]=box.dataset.names.split(',');
+  box.querySelector('.fdef-body').innerHTML=`
+    <label>Kalorisini nasıl biliyorsun?</label>
+    <div class="seg"><button type="button" data-m="g" class="active">⚖️ 100 gramı</button><button type="button" data-m="u">🍽️ 1 porsiyonu</button></div>
+    <div data-show="g"><label>100 gramı kaç kcal?</label><input name="${k}" type="number" step="any" inputmode="decimal" placeholder="örn. 567 (ambalaj etiketinde yazar)"></div>
+    <div data-show="u" style="display:none"><div class="g2">
+      <div><label>Porsiyonun adı</label><input name="${u}" data-role="u" placeholder="tabak, adet, avuç…"></div>
+      <div><label>1 porsiyonu kaç kcal?</label><input name="${uk}" type="number" step="any" inputmode="decimal" placeholder="örn. 300"></div></div>
+      <label>1 porsiyonu kaç gram? <span class="opt">(isteğe bağlı · bilirsen gramla da yazabilirsin)</span></label><input name="${ug}" data-role="ug" type="number" step="any" inputmode="decimal" placeholder="örn. 200"></div>
+    <div data-show="g"><label>Porsiyon da ekle <span class="opt">(isteğe bağlı · her seferinde tartmamak için)</span></label><div class="g2">
+      <div><input data-mirror="u" placeholder="porsiyon adı: avuç, tabak…"></div>
+      <div><input data-mirror="ug" type="number" step="any" inputmode="decimal" placeholder="kaç gram? örn. 30"></div></div></div>
+    <label>Kaynak <span class="opt">(isteğe bağlı)</span></label><input name="${src}" placeholder="TürKomp, ambalaj etiketi, link…">
+    <input type="hidden" data-role="mode" value="g">
+    <div class="sum"></div>`;
+  box.querySelector('.seg').addEventListener('click',e=>{const b=e.target.closest('[data-m]'); if(b) fdefSetMode(box,b.dataset.m);});
+  box.addEventListener('input',e=>{ const m=e.target.dataset.mirror; if(m) box.querySelector(`[data-role="${m}"]`).value=e.target.value; fdefSummary(box); });
+}
+function fdefSetMode(box,m){
+  box.querySelector('[data-role=mode]').value=m;
+  box.querySelectorAll('.seg [data-m]').forEach(b=>b.classList.toggle('active',b.dataset.m===m));
+  box.querySelectorAll('[data-show]').forEach(d=>d.style.display=d.dataset.show===m?'':'none');
+  // porsiyon alanları iki görünümde ortak: aynalardaki değeri eşitle
+  box.querySelectorAll('[data-mirror]').forEach(i=>i.value=box.querySelector(`[data-role="${i.dataset.mirror}"]`).value);
+  fdefSummary(box); box.closest('form')?.dispatchEvent(new Event('input',{bubbles:true}));
+}
+function fdefRead(box){
+  const [k,uk,u,ug,src]=box.dataset.names.split(','), f=box.closest('form'), g=n=>num(f.elements[n].value), m=box.querySelector('[data-role=mode]').value;
+  const r={k:m==='g'?(g(k)||null):null, uk:m==='u'?(g(uk)||null):null, u:f.elements[u].value.trim(), ug:g(ug)||null, src:f.elements[src].value.trim(), mode:m};
+  return r;
+}
+function fdefCheck(r){
+  if(r.u&&isGramWord(r.u)) return '“Gram” zaten hazır bir birim. Porsiyon adına tabak, adet, avuç gibi bir şey yaz ya da boş bırak.';
+  if(r.mode==='g'){ if(!(r.k>0)) return '100 gramın kalorisini yaz.'; if(r.u&&!(r.ug>0)) return `1 ${r.u} kaç gram? Bilmiyorsan porsiyon adını boş bırak.`; if(!r.u&&r.ug) return 'Porsiyonun adını da yaz (avuç, tabak…).'; }
+  else { if(!r.u) return 'Porsiyonun adını yaz (tabak, adet, avuç…).'; if(!(r.uk>0)) return `1 ${r.u} kaç kcal? Onu yaz.`; }
+  return '';
+}
+function fdefSummary(box){
+  const r=fdefRead(box), err=fdefCheck(r), el=box.querySelector('.sum'), any=r.k||r.uk||r.u||r.ug;
+  if(!any){ el.className='sum'; el.innerHTML='Doldurdukça burada ne kaydedileceğini göreceksin.'; return; }
+  if(err){ el.className='sum bad'; el.innerHTML='⚠️ '+esc(err); return; }
+  const n=normFood(r), parts=[];
+  if(n.k100) parts.push(`<b>100 g = ${fmt(n.k100)} kcal</b>`);
+  if(n.u&&n.ukc) parts.push(`<b>1 ${esc(n.u)}${n.ug?` (${fmt(n.ug)} g)`:''} = ${fmt(n.ukc)} kcal</b>`);
+  el.className='sum'; el.innerHTML=`✅ Kaydedilecek: ${parts.join(' · ')}<br><span class="small">Yerken ${[n.k100?'gramla':'',n.u&&n.ukc?esc(n.u)+' sayısıyla':''].filter(Boolean).join(' ya da ')} yazabileceksin.</span>`;
+}
+function fdefFill(box,fd){ const [k,uk,u,ug,src]=box.dataset.names.split(','), f=box.closest('form');
+  f.elements[k].value=fd.k||''; f.elements[uk].value=fd.uk||''; f.elements[u].value=fd.u||''; f.elements[ug].value=fd.ug||''; f.elements[src].value=fd.src||'';
+  fdefSetMode(box,fd.k?'g':(fd.uk?'u':'g')); }
+function fdefReset(box){ fdefSetMode(box,'g'); fdefSummary(box); }
+$$('.fdef').forEach(fdefInit);
+
 function eatFood(){ const f=$('#f-eat'), name=f.elements.food.value.trim(); if(!name) return null;
   const known=findFood(name); if(known) return known;
-  const g=k=>num(f.elements[k].value); return normFood({n:name,k:g('nk')||null,uk:g('nuk')||null,u:f.elements.nu.value.trim(),ug:g('nug')||null,src:f.elements.nsrc.value.trim(),isNew:true}); }
+  const r=fdefRead($('#newFood')); return normFood({n:name,k:r.k,uk:r.uk,u:isGramWord(r.u)?'':r.u,ug:r.ug,src:r.src,isNew:true,err:fdefCheck(r)}); }
 function unitOptions(){ const f=$('#f-eat'),food=eatFood(),sel=$('#unitSel'),prev=sel.value; let h='';
   if(food&&food.ukc) h+=`<option value="u">${esc(food.u||'birim')}${food.ug?` (~${fmt(food.ug)} g)`:''}</option>`;
-  if(!food||food.k100||food.isNew) h+=`<option value="g">gram</option>`;
+  if(!food||food.k100||(food.isNew&&!food.ukc)) h+=`<option value="g">gram</option>`;
   sel.innerHTML=h||'<option value="g">gram</option>';
   const nameNow=lc(f.elements.food.value); const changed=nameNow!==sel.dataset.food; sel.dataset.food=nameNow;
   if(!changed && sel.dataset.user && [...sel.options].some(o=>o.value===prev)) sel.value=prev;
@@ -906,14 +961,15 @@ function updatePreviews(){
   const r=actCalc(actInput(),curW()); $('#actPrev').textContent=`+${fmt(r.kcal)} kcal`; $('#actPrevSub').textContent=r.met?`${fmt1(r.met)} MET${r.km?` · ${fmt1(r.km)} km`:''} · ${fmt1(curW())} kg ile`:'';
   const f=$('#f-eat'), name=f.elements.food.value.trim(), known=name&&findFood(name);
   $('#newFood').style.display=name&&!known?'block':'none';
-  $('#foodInfo').innerHTML=known?`${known.k100?fmt(known.k100)+' kcal/100 g':''}${known.u&&known.ukc?` · 1 ${esc(known.u)} = ${fmt(known.ukc)} kcal`:''}${known.builtin?' · <span class="tag">hazır değer, doğrulanmadı</span>':known.src?` · 📎 ${esc(known.src)}`:''}`:'';
+  $('#foodInfo').innerHTML=known?`${known.k100?fmt(known.k100)+' kcal/100 g':''}${known.u&&known.ukc?` · 1 ${esc(known.u)} = ${fmt(known.ukc)} kcal`:''}${known.builtin?' · <span class="tag">hazır değer, doğrulanmadı</span>':known.src?` · 📎 ${esc(known.src)}`:''} · <a href="#" data-edit="${esc(known.n)}">✏️ cetvelde düzelt</a>`:'';
   const c=eatCalc(); $('#eatPrev').textContent=c&&c.kcal!=null?`${fmt(c.kcal)} kcal`:'—';
   const h=$('#f-health'),hv=num(h.elements.active.value); $('#hPrev').textContent=isFinite(hv)?`${sgn(hv-state.settings.baseline)} kcal`:'—';
 }
 $('#actSel').addEventListener('change',()=>{actFields();updatePreviews();});
 $('#unitSel').addEventListener('change',()=>{$('#unitSel').dataset.user='1';updatePreviews();});
 $$('.frm').forEach(f=>f.addEventListener('input',updatePreviews));
-['food','nk','nuk','nu','nug'].forEach(n=>$('#f-eat').elements[n].addEventListener('input',()=>{unitOptions();updatePreviews();}));
+$('#f-eat').elements.food.addEventListener('input',()=>{unitOptions();updatePreviews();});
+$('#newFood').addEventListener('input',()=>{unitOptions();updatePreviews();});
 function setPct(p){ $$('#pctChips .chip').forEach(c=>c.classList.toggle('active',c.dataset.p===String(p))); $('#f-eat').elements.pct.value=p; }
 $('#pctChips').addEventListener('click',e=>{const b=e.target.closest('[data-p]'); if(b){setPct(b.dataset.p);updatePreviews();}});
 $('#freqChips').addEventListener('click',e=>{const b=e.target.closest('[data-freq]'); if(!b) return; const f=$('#f-eat'); f.elements.food.value=b.dataset.freq;
@@ -925,12 +981,13 @@ $('#f-eat').elements.meal.value=defaultMeal();
 
 $('#f-eat').addEventListener('submit',async e=>{ e.preventDefault(); const f=e.target,c=eatCalc();
   if(!c) return toast('Ne yediğini yaz.');
-  if(c.kcal==null||!isFinite(c.kcal)) return toast(c.food.isNew?'Yeni yiyecek için kcal/100 g ya da birim kcal gir.':'Bu birim için kalori bilgisi yok.');
-  if(c.food.isNew){ const s={...state.settings}; const nf={n:c.food.n,k:c.food.k||null,uk:c.food.uk||null,u:c.food.u||'',ug:c.food.ug||null,src:c.food.src||''};
+  if(c.food.isNew&&c.food.err) return toast('⚠️ '+esc(c.food.err),4500);
+  if(c.kcal==null||!isFinite(c.kcal)) return toast(c.food.isNew?'Yeni yiyecek için kaloriyi yaz.':'Bu birim için kalori bilgisi yok.');
+  if(c.food.isNew){ const s={...state.settings}; const nf={n:c.food.n,k:c.food.k||null,uk:c.food.uk||null,u:c.food.u||'',ug:c.food.u?(c.food.ug||null):null,src:c.food.src||''};
     s.foods=[...(s.foods||[]).filter(x=>lc(x.n)!==lc(nf.n)),nf]; await backend.saveSettings(s); toast('📖 Cetveline eklendi'); }
   await backend.put({id:uid(),date:f.elements.date.value,meal:f.elements.meal.value,type:'eat',food:c.food.n,qty:c.qty,unit:c.unit,uname:c.food.u||'',pct:c.pct,kcal:Math.round(c.kcal),createdAt:Date.now()});
   toast(`🍽️ ${esc(c.food.n)}: ${fmt(c.kcal)} kcal deftere yazıldı`);
-  const d=f.elements.date.value,m=f.elements.meal.value; f.reset(); f.elements.date.value=d; f.elements.meal.value=m; f.elements.qty.value=1; setPct(100); unitOptions(); updatePreviews(); f.elements.food.focus(); });
+  const d=f.elements.date.value,m=f.elements.meal.value; f.reset(); f.elements.date.value=d; f.elements.meal.value=m; f.elements.qty.value=1; setPct(100); fdefReset($('#newFood')); unitOptions(); updatePreviews(); f.elements.food.focus(); });
 $('#f-activity').addEventListener('submit',e=>{ e.preventDefault(); const f=e.target,inp=actInput(),r=actCalc(inp,curW());
   if(!(inp.min>0)) return toast('Süreyi gir.'); if(ACTS[inp.act].mode==='met'&&!(inp.met>1)) return toast('MET değeri 1’den büyük olmalı.');
   if(['kosu','yuruyus','bisiklet','doga'].includes(inp.act)&&state.entries.some(x=>x.type==='health'&&x.date===f.elements.date.value)) toast('ℹ️ Bu güne ait saat verisi var. Aktivite saatle kaydedildiyse çifte sayım olur.',4500);
@@ -945,14 +1002,17 @@ $('#f-settings').addEventListener('submit',e=>{ e.preventDefault(); const f=e.ta
   for(const k of ['goal','dailyTarget','baseline','startWeight','height','age','factor','foodCaution','caution','stride','ewmaDays']){ const v=num(f.elements[k].value); if(isFinite(v)) s[k]=v; }
   backend.saveSettings(s); toast('⚙️ Ayarlar kaydedildi'); });
 $('#f-cetvel').addEventListener('submit',e=>{ e.preventDefault(); const f=e.target, g=k=>num(f.elements[k].value);
-  const nf={n:f.elements.n.value.trim(),k:g('k')||null,uk:g('uk')||null,u:f.elements.u.value.trim(),ug:g('ug')||null,src:f.elements.src.value.trim()};
-  if(!nf.n) return toast('Ad gerekli.'); if(!nf.k&&!nf.uk) return toast('kcal/100 g ya da birim kcal gir.'); if(nf.uk&&!nf.u) nf.u='birim';
+  const box=f.querySelector('.fdef'), r=fdefRead(box), err=fdefCheck(r);
+  const nf={n:f.elements.n.value.trim(),k:r.k,uk:r.uk,u:r.u,ug:r.u?r.ug:null,src:r.src};
+  if(!nf.n) return toast('Yiyeceğin adını yaz.'); if(err) return toast('⚠️ '+esc(err),4500);
   const orig=lc(f.elements.orig.value), s={...state.settings}; s.foods=[...(s.foods||[]).filter(x=>lc(x.n)!==lc(nf.n)&&lc(x.n)!==orig),nf];
-  backend.saveSettings(s); f.reset(); $('#cfTitle').textContent='Cetvele yiyecek ekle'; toast('📖 Cetvel güncellendi'); });
-$('#cfReset').addEventListener('click',()=>{ $('#f-cetvel').reset(); $('#cfTitle').textContent='Cetvele yiyecek ekle'; });
+  backend.saveSettings(s); f.reset(); fdefReset(box); $('#cfTitle').textContent='Cetvele yiyecek ekle'; toast('📖 Cetvel güncellendi'); });
+$('#cfReset').addEventListener('click',()=>{ $('#f-cetvel').reset(); fdefReset($('#f-cetvel .fdef')); $('#cfTitle').textContent='Cetvele yiyecek ekle'; });
 $('#cvSearch').addEventListener('input',renderCetvel);
-$('#histSeg').addEventListener('click',e=>{const b=e.target.closest('[data-h]'); if(!b) return; $$('#histSeg button').forEach(x=>x.classList.toggle('active',x===b));
-  $('#histWrap').style.display=b.dataset.h==='defter'?'block':'none'; $('#cetvelWrap').style.display=b.dataset.h==='cetvel'?'block':'none'; });
+function showHist(h){ $$('#histSeg button').forEach(x=>x.classList.toggle('active',x.dataset.h===h));
+  $('#histWrap').style.display=h==='defter'?'block':'none'; $('#cetvelWrap').style.display=h==='cetvel'?'block':'none'; }
+function openCetvel(){ go('history'); showHist('cetvel'); }
+$('#histSeg').addEventListener('click',e=>{const b=e.target.closest('[data-h]'); if(b) showHist(b.dataset.h); });
 
 function closeDay(d){ const p=lastSt?.series.find(x=>x.d===d); if(p&&!p.hasFood&&!confirm(`${trDate(d,{day:'numeric',month:'long'})} için hiç yemek yazılmamış. Yine de kapatılsın mı?`)) return;
   backend.put({id:'close-'+d,date:d,type:'close',createdAt:Date.now()}); const v=p?Math.round(p.deficit):0; toast(v>=0?`✅ Gün kapandı: kumbaraya ${sgn(v)} kcal 🐷`:`📒 Gün kapandı: ${sgn(v)} kcal. Yarın yeni bir sayfa.`,4000); }
@@ -974,8 +1034,9 @@ document.addEventListener('click',e=>{
     toast(`⭐ ${esc(tp.n)}: ${tp.items.length} kalem, ${fmt(tp.items.reduce((a,x)=>a+x.kcal,0))} kcal deftere yazıldı`); return; }
   if(t.dataset.deltpl){ const s={...state.settings}; const tp=(s.templates||[])[+t.dataset.deltpl]; if(!tp||!confirm(`“${tp.n}” şablonu silinsin mi?`)) return; s.templates=s.templates.filter((_,i)=>i!==+t.dataset.deltpl); backend.saveSettings(s); return; }
   if(t.dataset.addmeal){ const [d,m]=t.dataset.addmeal.split('|'); go('add','eat'); const f=$('#f-eat'); f.elements.date.value=d; f.elements.meal.value=m; f.elements.food.focus(); return; }
-  if(t.dataset.edit){ const fd=findFood(t.dataset.edit); const f=$('#f-cetvel'); f.elements.orig.value=fd.builtin?'':fd.n; f.elements.n.value=fd.n; f.elements.k.value=fd.k||''; f.elements.uk.value=fd.uk||''; f.elements.u.value=fd.u||''; f.elements.ug.value=fd.ug||''; f.elements.src.value=fd.src||'';
-    $('#cfTitle').textContent=fd.builtin?'Hazır değeri doğrula / düzelt':'Kaydı düzenle'; f.scrollIntoView({behavior:'smooth'}); return; }
+  if(t.dataset.edit){ e.preventDefault(); const fd=findFood(t.dataset.edit); if(!fd) return toast('Bu yiyecek cetvelde yok.'); openCetvel();
+    const f=$('#f-cetvel'); f.elements.orig.value=fd.builtin?'':fd.n; f.elements.n.value=fd.n; fdefFill(f.querySelector('.fdef'),{...fd,u:isGramWord(fd.u)?'':fd.u});
+    $('#cfTitle').textContent=fd.builtin?'Hazır değeri doğrula / düzelt':`“${fd.n}” düzenleniyor`; setTimeout(()=>f.scrollIntoView({behavior:'smooth',block:'start'}),50); return; }
   if(t.dataset.delfood){ if(!confirm(`“${t.dataset.delfood}” cetvelden silinsin mi? (Defterdeki eski kayıtlar etkilenmez.)`)) return; const s={...state.settings}; s.foods=(s.foods||[]).filter(x=>lc(x.n)!==lc(t.dataset.delfood)); backend.saveSettings(s); }
 });
 $('#copyUrl').addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText($('#scUrl').textContent); toast('📋 Kopyalandı'); }catch(e){ toast('Kopyalanamadı, elle seç.'); } });
