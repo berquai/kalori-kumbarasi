@@ -103,40 +103,37 @@ input:focus,select:focus{outline:2px solid rgba(244,185,66,.6);border-color:tran
 .newfood{border:1px dashed var(--gold);border-radius:14px;padding:4px 12px 12px;margin-top:12px}
 .vit{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line);font-size:14.5px;line-height:1.4}
 .vit:first-child,.row+.vit{border-top:0}.vtag{display:block;font-size:10px;letter-spacing:.12em;font-weight:800;color:var(--gold);margin-bottom:2px}.vit .e{font-size:24px;line-height:1}
-.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
-.badge{background:var(--card2);border-radius:16px;padding:14px 6px 12px;text-align:center;border:1px solid var(--line);position:relative;overflow:hidden}
-.badge .n{font-size:12px;font-weight:700;line-height:1.2}
-.badge .d{font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.25}
-.badge .tier{font-size:9px;font-weight:800;letter-spacing:.14em;margin-top:5px;text-transform:uppercase}
-.badge .pct{font-size:10px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.badge{display:grid;justify-items:center;align-content:start;text-align:center;gap:5px;padding:14px 10px 12px;border-radius:16px;border:1px solid var(--line);background:var(--card2)}
+.badge .n{font-size:13px;font-weight:700;line-height:1.25}
+.badge .d{font-size:11.5px;color:var(--muted);line-height:1.3}
 .badge.off .n{color:var(--muted)}
-.t1 .tier{color:#c27a43}.t2 .tier{color:#8f9bab}.t3 .tier{color:var(--gold)}
-.t4 .tier{background:linear-gradient(90deg,#b07a1a,#ffd86b,#b07a1a);-webkit-background-clip:text;background-clip:text;color:transparent}
-.medal{--sz:60px;width:var(--sz);height:var(--sz);margin:2px auto 10px;border-radius:50%;position:relative;display:grid;place-items:center;isolation:isolate}
-.medal .core{width:calc(var(--sz) - 10px);height:calc(var(--sz) - 10px);border-radius:50%;display:grid;place-items:center;position:relative;overflow:hidden}
-.medal .e{font-size:calc(var(--sz) * .42);line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
-.on.t1 .medal{background:conic-gradient(from 200deg,#7c4220,#e7a873,#9a5a2c,#f4c093,#7c4220);box-shadow:0 3px 8px rgba(0,0,0,.28)}
-.on.t1 .core{background:radial-gradient(circle at 35% 30%,#f8d0a8,#c47c45 58%,#86491f);box-shadow:inset 0 0 0 2px rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.25)}
-.on.t2 .medal{background:conic-gradient(from 200deg,#6f7986,#f3f6f9,#98a2ae,#ffffff,#6f7986);box-shadow:0 3px 8px rgba(0,0,0,.28)}
-.on.t2 .core{background:radial-gradient(circle at 35% 30%,#ffffff,#c8d0d9 58%,#86909c);box-shadow:inset 0 0 0 2px rgba(255,255,255,.4),inset 0 -3px 6px rgba(0,0,0,.2)}
-.on.t3 .medal,.on.t4 .medal{background:conic-gradient(from 200deg,#8d5e0e,#ffe28f,#c48d1e,#fff6c8,#8d5e0e);box-shadow:0 3px 10px rgba(176,122,26,.45)}
-.on.t3 .core,.on.t4 .core{background:radial-gradient(circle at 35% 30%,#fff8d6,#f2c14e 55%,#a8701a);box-shadow:inset 0 0 0 2px rgba(255,255,255,.45),inset 0 -3px 7px rgba(110,70,0,.35)}
-.on.t3 .core::after,.on.t4 .core::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.6) 50%,transparent 62%);background-size:260% 100%;animation:sheen 5s ease-in-out infinite}
-@keyframes sheen{0%{background-position:160% 0}55%,100%{background-position:-60% 0}}
-.t4 .medal{--sz:72px;margin-top:12px}
-.on.t4 .medal{box-shadow:0 0 0 2px rgba(255,216,107,.35),0 0 22px rgba(244,185,66,.55),0 4px 12px rgba(0,0,0,.35)}
-.t4 .medal::before{content:'';position:absolute;top:-16px;left:50%;transform:translateX(-50%);width:30px;height:24px;z-index:-1;clip-path:polygon(0 0,100% 0,100% 100%,50% 72%,0 100%);background:linear-gradient(90deg,#9e1b25 0 34%,#f2c14e 34% 66%,#9e1b25 66%)}
-.off.t4 .medal::before{filter:grayscale(1);opacity:.35}
-.medal .laurel{position:absolute;inset:-13px;width:calc(100% + 26px);height:calc(100% + 26px);z-index:2;pointer-events:none}
-.off .laurel{filter:grayscale(1);opacity:.3}
-.on.t4{border-color:#e9b949;background:radial-gradient(120% 70% at 50% 0%,rgba(244,197,66,.22),transparent 65%),var(--card2)}
-.on.t3{border-color:rgba(233,185,73,.6)}.on.t2{border-color:rgba(160,172,186,.55)}.on.t1{border-color:rgba(196,124,69,.5)}
-.badge.off .medal{background:conic-gradient(var(--gold) var(--p),var(--track) 0)}
-.badge.off .core{background:var(--card);box-shadow:inset 0 2px 6px rgba(0,0,0,.25)}
-.badge.off .e{filter:grayscale(1);opacity:.35}
-.tiercount{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:13px}
-.tiercount span{display:flex;align-items:center;gap:6px}.tiercount i{width:14px;height:14px;border-radius:50%;display:inline-block}
-@media (prefers-reduced-motion:reduce){.on.t3 .core::after,.on.t4 .core::after{animation:none}}
+.badge .mini{width:80%}
+.badge .pct{font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rz-ikon{width:88px;height:88px;display:grid;place-items:center}
+.rz-ikon svg{width:100%;height:100%;overflow:visible}
+.rz-emoji{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.rz4{filter:drop-shadow(0 2px 3px rgba(138,93,0,.35))}.rz5{filter:drop-shadow(0 2px 5px rgba(95,138,160,.45))}
+.rz6{filter:drop-shadow(0 0 6px rgba(155,108,247,.55))}.rz7{filter:drop-shadow(0 0 8px rgba(217,165,20,.6)) drop-shadow(0 0 14px rgba(168,85,247,.35))}
+.rz-hale{transform-origin:60px 62px;animation:rz-don 14s linear infinite}
+.rz-parilti{animation:rz-parla 4.5s ease-in-out infinite}
+.rz-isilti{transform-box:fill-box;transform-origin:center;animation:rz-isil 2.4s ease-in-out infinite}.rz-isilti.g2{animation-delay:.8s}.rz-isilti.g3{animation-delay:1.6s}
+@keyframes rz-don{to{transform:rotate(360deg)}}
+@keyframes rz-parla{0%,55%{transform:rotate(20deg) translateX(0)}100%{transform:rotate(20deg) translateX(150px)}}
+@keyframes rz-isil{0%,100%{transform:scale(.4);opacity:.3}50%{transform:scale(1.15);opacity:1}}
+.rz-ikon.kilit svg{filter:grayscale(1) contrast(.85);opacity:.3}.rz-ikon.kilit *{animation:none!important}
+@media (prefers-reduced-motion:reduce){.rz-ikon *{animation:none!important}}
+.seviye{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:2px 9px;border-radius:999px;background:var(--track);color:var(--muted)}
+.on .seviye.sv1{background:#e3e5e8;color:#4b5057}.on .seviye.sv2{background:#f1d3b8;color:#6e3b17}
+.on .seviye.sv3{background:linear-gradient(90deg,#eef1f4,#c5ccd4);color:#3f4955}.on .seviye.sv4{background:linear-gradient(90deg,#fff1a8,#e7b52c);color:#5c3d00}
+.on .seviye.sv5{background:linear-gradient(90deg,#fff,#bfe3ef);color:#2f5b70;box-shadow:inset 0 0 0 1px #9cc6d6}
+.on .seviye.sv6{background:linear-gradient(90deg,#7c3aed,#22d3ee);color:#fff}
+.on .seviye.sv7{background:linear-gradient(90deg,#1a1236,#4c3a8a 40%,#d9a514);color:#ffe9a8;box-shadow:0 0 0 1px #d9a514}
+.badge.on.sv4{border-color:rgba(231,181,44,.55);background:linear-gradient(170deg,rgba(255,241,168,.16),var(--card2) 65%)}
+.badge.on.sv5{border-color:rgba(156,198,214,.7);background:linear-gradient(170deg,rgba(211,236,244,.18),var(--card2) 65%)}
+.badge.on.sv6{border-color:#9b6cf7;background:linear-gradient(170deg,rgba(155,108,247,.16),var(--card2) 70%);box-shadow:0 0 0 1px rgba(155,108,247,.4),0 6px 20px rgba(155,108,247,.18)}
+.badge.on.sv7{border:1.5px solid #d9a514;background:radial-gradient(circle at 50% 0,rgba(168,85,247,.22),var(--card2) 70%);box-shadow:0 0 0 1px rgba(217,165,20,.4),0 8px 26px rgba(168,85,247,.25)}
+.tiercount{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
 .mini{height:4px;background:var(--track);border-radius:9px;margin-top:6px;overflow:hidden}.mini i{display:block;height:100%;background:var(--gold)}
 .meal{margin-top:12px}
 .meal-h{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:14px;margin-bottom:2px}
@@ -522,8 +519,8 @@ function computeStats(){
   const daysLeft=Math.max(1,dayDiff(today,plannedEnd)+(todayClosed?0:1));
   const required=remaining/daysLeft, planDiff=total-s.dailyTarget*span.length;
   const streak=(test)=>{ let cur=0,best=0; const used={};
-    for(const p of span){ if(test(p)){cur++;best=Math.max(best,cur);} else { const m=p.d.slice(0,7); if(cur>0&&(used[m]||0)<2) used[m]=(used[m]||0)+1; else cur=0; } }
-    return {cur,best,left:2-(used[today.slice(0,7)]||0)}; };
+    for(const p of span){ if(test(p)){cur++;best=Math.max(best,cur);} else { const m=mondayOf(p.d); if(cur>0&&(used[m]||0)<2) used[m]=(used[m]||0)+1; else cur=0; } }
+    return {cur,best,left:2-(used[mondayOf(today)]||0)}; };
   const stPos=streak(p=>p.closed&&p.v>0), stTgt=streak(p=>p.closed&&p.v>=p.target), stLog=streak(p=>p.closed);
   const last30=series.slice(-30);
   const cumAfterToday=T.closed?T.cum:T.cum+T.deficit, tomorrowTarget=targetFor(T.i+1,cumAfterToday);
@@ -601,7 +598,7 @@ function badges(st){
   ser++; [7,30,100].forEach((t,i)=>add('Defter',['✍️','🖋️','🪶'][i],`Aksatmayan kâtip ${t}`,`Art arda ${t} gün kapanış`,st.stLog.best,t));
   ser++; [[5,'📖','Cetvel açıldı'],[25,'📗','Cetvel büyüyor'],[50,'📘','Kendi cetvelin'],[100,'📚','Kalori ansiklopedisi']].forEach(([t,e,n])=>add('Cetvel',e,n,`Cetvelinde ${t} kendi kaydın`,st.ownFoods,t));
   ser++; [[10,'🔎','Kaynakçı'],[50,'🎓','Dipnot ustası']].forEach(([t,e,n])=>add('Cetvel',e,n,`${t} kaydın kaynağı yazılı`,st.srcFoods,t));
-  ser++; [3,7,14,30,60,100,180,365].forEach(t=>add('Kumbara serisi','🔗',`${t} gün`,'Art arda artı günler (ayda 2 dondurma hakkı)',st.stPos.best,t));
+  ser++; [3,7,14,30,60,100,180,365].forEach(t=>add('Kumbara serisi','🔗',`${t} gün`,'Art arda artı günler (haftada 2 dondurma hakkı)',st.stPos.best,t));
   ser++; [3,7,14,30,60,100].forEach(t=>add('Hedef serisi','🎯',`${t} gün`,'Art arda günün hedefini tuttun',st.stTgt.best,t));
   ser++; [[1,'🎯','İlk hedef günü'],[10,'🎯','10 hedef günü'],[50,'🎯','50 hedef günü'],[150,'🎯','150 hedef günü'],[250,'🎯','250 hedef günü']].forEach(([t,e,n])=>add('Hedef günleri',e,n,`${t===1?'Günün hedefini ilk kez':t+' gün'} tuttun`,st.hitDays,t));
   ser++; [[1,'🏋️','İlk kuvvet'],[8,'💪','Bir ay, haftada iki'],[26,'🦾','Çeyrek yıl'],[52,'🗽','52 seans'],[104,'⚒️','Yıl boyu, haftada iki']].forEach(([t,e,n])=>add('Kuvvet',e,n,`${t} kuvvet seansı`,st.strengthN,t));
@@ -612,10 +609,10 @@ function badges(st){
   ser++; add('Özel','🌧️','Yağmur da yağsa','Aralık–Şubat’ta 60 artı gün',st.winterDays,60);
   ser++; add('Özel','📒','Dürüst muhasebeci','İlk “Ekstra”yı saklamadan yazdın',st.extraN,1);
   ser++; add('Özel','🔄','Toparlanma','Eksi günün ertesi hedef günü',st.comeback?1:0,1);
-  // kademe: her tanım satırı bir seridir; seri içinde kolaydan zora bronz → gümüş → altın → altın madalyon
+  // kademe: her tanım satırı bir seridir; seri içinde kolaydan zora Taş → Bronz → Gümüş → Altın → Platin → Elmas → Efsane
   const groups=new Map(); L.forEach(b=>{ if(!groups.has(b.ser)) groups.set(b.ser,[]); groups.get(b.ser).push(b); });
-  for(const g0 of groups.values()){ const g=[...g0].sort((x,y)=>x.target-y.target), n=g.length; g.forEach((b,r)=>{ b.tier=n===1?3:n===2?[2,3][r]:r===n-1?4:(r/(n-1)<1/3?1:r/(n-1)<2/3?2:3); }); }
-  const top=L.find(b=>b.id==='Kumbara|Kumbara doldu'); if(top) top.tier=4;
+  for(const g0 of groups.values()){ const g=[...g0].sort((x,y)=>x.target-y.target), n=g.length; g.forEach((b,r)=>{ b.tier=Madalya.seviye(r,n); }); }
+  const top=L.find(b=>b.id==='Kumbara|Kumbara doldu'); if(top) top.tier=7;
   return L;
 }
 
@@ -735,7 +732,7 @@ function renderHome(st){
     ${T.closed&&T.deficit>1200?`<div class="warn">🛑 <b>Güvenlik freni:</b> ${fmt(T.deficit)} kcal açık. Ara sıra sorun değil; düzenli hale gelirse vücut enerjiyi kastan da karşılamaya başlar.</div>`:''}
     ${T.closed&&T.intake>0&&T.intake<T.bmr?`<div class="warn">⚠️ Bugün bazal metabolizmanın (${fmt(T.bmr)} kcal) altında yemişsin. Bu bir yıllık maratonda sürdürülebilir değil; kası korumak için yeterli ye.</div>`:''}
     <div style="margin-top:14px">${T.closed?`<button class="btn ghost full" data-reopen="${st.today}">Günü yeniden aç</button>`:`<button class="btn primary full" data-close="${st.today}">✅ Günü kapat, kumbaraya at</button>`}</div>
-    <p class="muted small" style="margin-top:8px">🔗 Kumbara serisi <b>${st.stPos.cur}</b> · 🎯 Hedef serisi <b>${st.stTgt.cur}</b> · 📒 Defter serisi <b>${st.stLog.cur}</b> · ❄️ Bu ay dondurma <b>${st.stPos.left}</b></p>`;
+    <p class="muted small" style="margin-top:8px">🔗 Kumbara serisi <b>${st.stPos.cur}</b> · 🎯 Hedef serisi <b>${st.stTgt.cur}</b> · 📒 Defter serisi <b>${st.stLog.cur}</b> · ❄️ Bu hafta dondurma <b>${st.stPos.left}</b></p>`;
 
   let fc='';
   if(st.pace==null||st.pace<=0) fc='<p>Tempo henüz pozitif değil. İlk kapanan artı günle birlikte tahmin canlanacak.</p>';
@@ -754,19 +751,53 @@ function renderHome(st){
   const fi=((dayDiff('2026-01-01',st.today)*7+factShift)%FACTS.length+FACTS.length)%FACTS.length;
   $('#fact').innerHTML=`<div class="row"><h2>Biliyor muydun?</h2><button class="btn sm ghost" id="factMore" type="button">💡 Bir tane daha</button></div><div class="fact">${FACTS[fi]}</div><div class="muted small" style="margin-top:8px">${fi+1} / ${FACTS.length}</div>`;
 }
-const TIERN={1:'Bronz',2:'Gümüş',3:'Altın',4:'Altın madalyon'};
-const LAUREL=(()=>{ const leaf=(cx,cy,a)=>`<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="6.2" ry="2.5" transform="rotate(${a.toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)})"/>`; let L='';
-  for(let k=0;k<8;k++){ const t=(118+k*15)*Math.PI/180, r=45, x=50+r*Math.cos(t), y=50+r*Math.sin(t), a=t*180/Math.PI+90;
-    L+=leaf(x,y,a-18)+leaf(100-x,y,180-a+18); }
-  return `<svg class="laurel" viewBox="0 0 100 100"><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe28f"/><stop offset="1" stop-color="#a8701a"/></linearGradient></defs><g fill="url(#lg)" stroke="rgba(90,55,0,.35)" stroke-width=".4">${L}</g></svg>`; })();
-function badgeHTML(b){const p=Math.min(100,100*b.val/b.target), t=b.tier||1;
-  return `<div class="badge t${t} ${b.done?'on':'off'}" title="${esc(TIERN[t])}"><div class="medal" style="--p:${p.toFixed(1)}%"><span class="core"><span class="e">${b.e}</span></span>${t===4?LAUREL:''}</div><div class="n">${esc(b.n)}</div><div class="tier">${TIERN[t]}</div><div class="d">${esc(b.d)}</div>${b.done?'':`<div class="pct">%${fmt(p)}</div>`}</div>`;}
+/* Madalyalar — anadilimgibi’deki 7 seviyeli tasarım (Taş · Bronz · Gümüş · Altın · Platin · Elmas · Efsane) */
+const Madalya=(()=>{
+  const SEVIYE=['','Taş','Bronz','Gümüş','Altın','Platin','Elmas','Efsane'];
+  const PAL={1:{a:'#d9dcdf',b:'#9aa0a6',c:'#62676d'},2:{a:'#f6cba4',b:'#c4824e',c:'#6e3b17'},3:{a:'#ffffff',b:'#c5ccd4',c:'#6f7a87'},
+    4:{a:'#fff4b8',b:'#eebc2f',c:'#8a5d00'},5:{a:'#ffffff',b:'#d3ecf4',c:'#5f8aa0'},6:{a:'#f3e8ff',b:'#9b6cf7',c:'#33136e'},7:{a:'#fff1b0',b:'#d9a514',c:'#5c3d00'}};
+  let sayac=0; const f=n=>+n.toFixed(2), nk=(r,a)=>[f(60+r*Math.cos(a*Math.PI/180)),f(60+r*Math.sin(a*Math.PI/180))];
+  const cokgen=(n,r,d=-90)=>Array.from({length:n},(_,i)=>nk(r,d+360*i/n).join(',')).join(' ');
+  const yildiz=(n,R,r,d=-90)=>Array.from({length:2*n},(_,i)=>nk(i%2?r:R,d+180*i/n).join(',')).join(' ');
+  function defne(renk,R=52){ let s=''; for(const y of [-1,1]) for(let i=0;i<9;i++){ const a=90+y*(22+i*15), [x,yy]=nk(R+(i%2?2:-1),a);
+    s+=`<ellipse cx="${x}" cy="${yy}" rx="3.6" ry="8.5" transform="rotate(${f(a+(y>0?20:-20))} ${x} ${yy})" fill="${renk}"/>`; } return `<g opacity=".95">${s}</g>`; }
+  const kurdele=(r1,r2)=>`<polygon points="40,78 28,118 42,109 50,119 58,84" fill="${r1}"/><polygon points="80,78 92,118 78,109 70,119 62,84" fill="${r2}"/><polygon points="40,78 34,101 46,95 58,84" fill="#000" opacity=".18"/><polygon points="80,78 86,101 74,95 62,84" fill="#000" opacity=".18"/>`;
+  const tac=(id,renk,koyu)=>`<g><polygon points="41,24 45,7 53,16 60,2 67,16 75,7 79,24" fill="url(#${id}m)" stroke="${koyu}" stroke-width="1.4" stroke-linejoin="round"/><rect x="41" y="21" width="38" height="5" rx="2" fill="${renk}" stroke="${koyu}" stroke-width="1"/><circle cx="60" cy="9" r="2.4" fill="#e11d48"/><circle cx="47" cy="13" r="1.8" fill="#38bdf8"/><circle cx="73" cy="13" r="1.8" fill="#38bdf8"/></g>`;
+  const pirilti=(x,y,s,renk='#fff',an='')=>`<path class="${an}" d="M${x} ${y-s} Q${x} ${y} ${x+s} ${y} Q${x} ${y} ${x} ${y+s} Q${x} ${y} ${x-s} ${y} Q${x} ${y} ${x} ${y-s}Z" fill="${renk}"/>`;
+  function mucevher(r,ic,r1,r2){ const d=Array.from({length:8},(_,i)=>nk(r,-90+45*i+22.5)), c=Array.from({length:8},(_,i)=>nk(ic,-90+45*i+22.5)); let s='';
+    for(let i=0;i<8;i++){ const j=(i+1)%8; s+=`<polygon points="${d[i]} ${d[j]} ${c[j]} ${c[i]}" fill="${i%2?r1:r2}" opacity="${0.55+0.4*((i*3)%8)/8}"/>`; }
+    return s+`<polygon points="${c.map(p=>p.join(',')).join(' ')}" fill="${r1}" opacity=".9"/>`; }
+  function svg(sv,ikon){
+    sv=Math.max(1,Math.min(7,sv)); const id='rz'+(++sayac), p=PAL[sv];
+    const emo=(b,y=61)=>`<text x="60" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="${b}" class="rz-emoji">${ikon}</text>`, par=r=>`<circle cx="60" cy="60" r="${r}" fill="url(#${id}p)"/>`;
+    const defs=`<defs><linearGradient id="${id}m" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p.a}"/><stop offset=".5" stop-color="${p.b}"/><stop offset="1" stop-color="${p.c}"/></linearGradient>
+      <linearGradient id="${id}t" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.a}"/><stop offset=".6" stop-color="${p.b}"/><stop offset="1" stop-color="${p.c}"/></linearGradient>
+      <radialGradient id="${id}p" cx=".32" cy=".26" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></radialGradient>
+      <linearGradient id="${id}au" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".35" stop-color="#a855f7"/><stop offset=".7" stop-color="#f472b6"/><stop offset="1" stop-color="#facc15"/></linearGradient>
+      <radialGradient id="${id}ob" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#4c3a8a"/><stop offset=".6" stop-color="#1a1236"/><stop offset="1" stop-color="#07040f"/></radialGradient>
+      <clipPath id="${id}k"><circle cx="60" cy="60" r="40"/></clipPath></defs>`;
+    let g;
+    if(sv===1) g=`<circle cx="60" cy="60" r="44" fill="url(#${id}m)" stroke="${p.c}" stroke-width="2"/><circle cx="60" cy="60" r="36" fill="${p.b}" opacity=".55"/>${emo(34)}`;
+    else if(sv===2) g=`<circle cx="60" cy="60" r="50" fill="url(#${id}m)" stroke="${p.c}" stroke-width="1.5"/><circle cx="60" cy="60" r="43" fill="none" stroke="${p.c}" stroke-width="1.5" opacity=".7"/><circle cx="60" cy="60" r="39" fill="url(#${id}t)"/>${par(50)}${emo(36)}`;
+    else if(sv===3){ const pc=Array.from({length:6},(_,i)=>{const [x,y]=nk(47,-90+60*i);return `<circle cx="${x}" cy="${y}" r="2.2" fill="${p.a}" stroke="${p.c}" stroke-width=".8"/>`;}).join('');
+      g=`<polygon points="${cokgen(6,55)}" fill="url(#${id}m)" stroke="${p.c}" stroke-width="2" stroke-linejoin="round"/><polygon points="${cokgen(6,41)}" fill="url(#${id}t)" stroke="${p.c}" stroke-width="1" opacity=".95"/>${pc}${par(52)}${emo(36)}`; }
+    else if(sv===4) g=`${kurdele('#b91c1c','#1e3a8a')}<polygon points="${yildiz(20,54,48)}" fill="url(#${id}m)" stroke="${p.c}" stroke-width="1.2" stroke-linejoin="round"/><circle cx="60" cy="60" r="42" fill="url(#${id}t)" stroke="${p.c}" stroke-width="1.5"/><circle cx="60" cy="60" r="35" fill="none" stroke="${p.a}" stroke-width="1.2" stroke-dasharray="2 3" opacity=".9"/>${par(54)}${emo(36)}${pirilti(88,30,5)}`;
+    else if(sv===5) g=`${kurdele('#1e3a8a','#64748b')}${defne('#9fb7a5',53)}<polygon points="${yildiz(24,49,45)}" fill="url(#${id}m)" stroke="${p.c}" stroke-width="1" stroke-linejoin="round"/><circle cx="60" cy="60" r="40" fill="url(#${id}t)" stroke="${p.c}" stroke-width="1.5"/><circle cx="60" cy="60" r="34" fill="none" stroke="#fff" stroke-width="1.5" opacity=".8"/><g clip-path="url(#${id}k)"><rect class="rz-parilti" x="-40" y="-20" width="22" height="160" fill="#fff" opacity=".45" transform="rotate(20 60 60)"/></g>${par(50)}${emo(34)}${pirilti(92,26,6)}${pirilti(26,36,4)}`;
+    else if(sv===6) g=`${defne('#e2b93b',54)}<polygon points="${yildiz(8,58,38,-67.5)}" fill="url(#${id}au)" opacity=".9"/><circle cx="60" cy="62" r="40" fill="${p.c}" stroke="#e2b93b" stroke-width="2.5"/><g transform="translate(0 2)">${mucevher(38,24,'#c4b5fd','#5b21b6')}</g>${par(44)}${emo(30,63)}${tac(id,'#e2b93b','#8a5d00')}${pirilti(98,40,6,'#fff','rz-isilti')}${pirilti(22,86,5,'#fff','rz-isilti g2')}${pirilti(96,92,4,'#fde68a','rz-isilti g3')}`;
+    else g=`<g class="rz-hale"><circle cx="60" cy="62" r="57" fill="none" stroke="url(#${id}au)" stroke-width="5" stroke-dasharray="10 6"/></g><polygon points="${yildiz(16,56,46,-90)}" fill="url(#${id}m)" stroke="#7a5300" stroke-width="1" transform="translate(0 2)"/>${defne('#f5d36b',52)}<circle cx="60" cy="62" r="40" fill="url(#${id}ob)" stroke="url(#${id}m)" stroke-width="3.5"/><g transform="translate(0 2)" opacity=".55">${mucevher(36,22,'#7c3aed','#1e1b4b')}</g><g clip-path="url(#${id}k)" transform="translate(0 2)"><rect class="rz-parilti" x="-40" y="-20" width="20" height="160" fill="#fff" opacity=".35" transform="rotate(20 60 60)"/></g>${emo(30,63)}${tac(id,'#f5d36b','#7a5300')}${pirilti(100,34,7,'#fff','rz-isilti')}${pirilti(18,50,5,'#fde68a','rz-isilti g2')}${pirilti(100,96,5,'#a5f3fc','rz-isilti g3')}${pirilti(20,98,4,'#fff','rz-isilti g2')}`;
+    return `<svg viewBox="0 0 120 120" class="rz rz${sv}" aria-hidden="true">${defs}${g}</svg>`;
+  }
+  const seviye=(i,n)=>n<=1?4:Math.round(1+6*i/(n-1));   // ilk rozet Taş, son rozet Efsane
+  return {svg,seviye,SEVIYE};
+})();
+function badgeHTML(b){const p=Math.min(100,100*b.val/b.target), t=b.tier||4;
+  return `<div class="badge sv${t} ${b.done?'on':'off'}"><span class="rz-ikon ${b.done?'':'kilit'}" title="${Madalya.SEVIYE[t]}">${Madalya.svg(t,b.e)}</span><span class="seviye sv${t}">${Madalya.SEVIYE[t]}</span><div class="n">${esc(b.n)}</div><div class="d">${esc(b.d)}</div>${b.done?'':`<div class="mini"><i style="width:${p}%"></i></div><div class="pct">%${fmt(p)}</div>`}</div>`;}
 function renderBadges(st){
   const bl=badges(st),cats=[...new Set(bl.map(b=>b.cat))],dn=bl.filter(b=>b.done).length;
   const tc=t=>`${bl.filter(b=>b.done&&b.tier===t).length}/${bl.filter(b=>b.tier===t).length}`;
   $('#badgeWrap').innerHTML=`<div class="card"><div class="row"><h2>Rozet koleksiyonu</h2><b class="gold">${dn} / ${bl.length}</b></div><div class="bar"><i style="width:${100*dn/bl.length}%"></i></div>
-    <div class="tiercount"><span><i style="background:radial-gradient(circle at 35% 30%,#f8d0a8,#c47c45 58%,#86491f)"></i>Bronz ${tc(1)}</span><span><i style="background:radial-gradient(circle at 35% 30%,#fff,#c8d0d9 58%,#86909c)"></i>Gümüş ${tc(2)}</span><span><i style="background:radial-gradient(circle at 35% 30%,#fff8d6,#f2c14e 55%,#a8701a)"></i>Altın ${tc(3)}</span><span><i style="background:radial-gradient(circle at 35% 30%,#fff8d6,#f2c14e 55%,#a8701a);box-shadow:0 0 6px #f4b942"></i>Madalyon ${tc(4)}</span></div>
-    <p class="muted small" style="margin-top:8px">Her seride rozetler kolaydan zora bronz, gümüş, altın ve en sonda altın madalyon olarak ilerler.</p></div>`+
+    <div class="tiercount on">${[1,2,3,4,5,6,7].map(t=>`<span class="seviye sv${t}">${Madalya.SEVIYE[t]} ${tc(t)}</span>`).join('')}</div>
+    <p class="muted small" style="margin-top:10px">Her seride rozetler kolaydan zora yedi seviyede ilerler: Taş, Bronz, Gümüş, Altın, Platin, Elmas ve en sonda Efsane.</p></div>`+
    cats.map(c=>{const g=bl.filter(b=>b.cat===c);return `<div class="catbar"><h3>${c}</h3><span class="muted small">${g.filter(b=>b.done).length}/${g.length}</span></div><div class="badges">${g.map(badgeHTML).join('')}</div>`}).join('')+
    `<p class="muted small" style="margin:18px 4px">Mesafeler yaklaşık karayolu/coğrafi değerlerdir. Yükseklik rozetleri, biriken enerjinin ~%25 kas verimiyle vücudunu ne kadar yükseğe taşıyabileceğini gösterir.</p>`;
 }
@@ -819,8 +850,8 @@ function fillFoodUI(){
 /* ---------- istatistik ---------- */
 let statRange='30', statShowAll=false;
 const WD=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
-const wdIdx=d=>{const [y,m,dd]=parts(d);return (new Date(y,m,dd).getDay()+6)%7;};
-const mondayOf=d=>addDays(d,-wdIdx(d));
+function wdIdx(d){const [y,m,dd]=parts(d);return (new Date(y,m,dd).getDay()+6)%7;}
+function mondayOf(d){return addDays(d,-wdIdx(d));}
 function statBars(days){
   const W=340,H=130,P={l:6,r:6,t:8,b:18},n=Math.max(days.length,7),M=Math.max(...days.map(p=>p.target*1.25),...days.map(p=>Math.abs(p.closed?p.deficit:0)));
   const bw=(W-P.l-P.r)/n, zero=H-P.b-(H-P.t-P.b)*0.2, sc=v=>(zero-P.t)*v/M;

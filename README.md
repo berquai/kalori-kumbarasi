@@ -70,7 +70,8 @@ Notlar:
 - **Alınan** = deftere yazılan yemekler + "Ekstra" tahminler, **× 1,10 yemek temkini** (göz kararı yağ, unutulan lokmalar).
 - **Kalori cetveli:** Hazır değerler yaklaşık başlangıç değerleridir ("hazır" etiketi). Cetvelde olmayan bir yiyeceği ilk yazışında tanımlarsın (kcal/100 g ya da 1 birim = kcal, birim gramı, kaynak); sonra hep hazır olur. Hazır bir değeri düzenlediğinde senin doğruladığın kayda dönüşür.
 - **Günün hedefi** (Ayarlar → Program): *Kalan ortalama* = kalan kcal ÷ kalan gün (varsayılan); *7 günde telafi* = gerideysen eksik önümüzdeki 7 güne yayılır, öndeysen fazlalık kalan güne yayılır (ihtiyatlı, hedef sıfıra düşmez); *Sabit* = kişisel plan. Kişisel plan (800) grafikte ve “Tam yıl temposu” rozetinde referans olarak kalır.
-- **Rozet kademeleri:** her seri kolaydan zora bronz → gümüş → altın → altın madalyon (defne ve kurdeleli).
+- **Rozet kademeleri:** anadilimgibi’deki 7 seviyeli madalya tasarımı; her seri kolaydan zora Taş → Bronz → Gümüş → Altın → Platin → Elmas → Efsane. “Kumbara doldu” her zaman Efsane.
+- **Dondurma hakkı:** seriler haftada 2 eksik günü affeder.
 - **Dinamik tahmin:** kapanan günlerin üstel ağırlıklı ortalaması (14 günlük hafıza). Kapatılmayan gün 0 sayılır.
 - **Güvenlik uyarıları:** günlük açık 1.200 kcal’i geçerse ya da yenen miktar bazal metabolizmanın altında kalırsa.
 - **Tema:** başlıktaki ☀️/🌙 düğmesi ya da Ayarlar → Görünüm (otomatik / açık / koyu).
