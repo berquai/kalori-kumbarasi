@@ -1006,8 +1006,10 @@ async function FirebaseBackend(cfg){
     let gE=false,gS=false; const chk=()=>{ if(gE&&gS&&!state.ready){ state.ready=true; processIngest(); startInbox(); } render(); };
     /* Arka plan posta kutusu: kestirme tarayıcı açmadan inbox/{anahtar}/days/{zaman} belgesine yazar; uygulama açılınca işleyip siler */
     const startInbox=async()=>{ try{
-      let key=state.settings.inboxKey;
-      if(!key||key.length<20){ const a=new Uint8Array(24); crypto.getRandomValues(a); key=[...a].map(b=>'abcdefghijklmnopqrstuvwxyz0123456789'[b%36]).join(''); await F.setDoc(F.doc(db,'users',me,'meta','settings'),clean(migrate({...state.settings,inboxKey:key}))); }
+      // Anahtar bir kez üretilir ve asla değişmez: önbellek bayat olabilir, karar vermeden önce sunucudaki ayara bak
+      const sref=F.doc(db,'users',me,'meta','settings'); let key=state.settings.inboxKey;
+      if(!key||key.length<20){ try{ const sv=await F.getDocFromServer(sref); const k2=sv.exists()?sv.data().inboxKey:null; if(k2&&k2.length>=20) key=k2; }catch(_){ throw Object.assign(new Error('sunucuya ulaşılamadı, sonra tekrar dene'),{code:'çevrimdışı'}); } }
+      if(!key||key.length<20){ const a=new Uint8Array(24); crypto.getRandomValues(a); key=[...a].map(b=>'abcdefghijklmnopqrstuvwxyz0123456789'[b%36]).join(''); await F.setDoc(sref,{inboxKey:key},{merge:true}); }
       state.inboxStep='kutu'; await F.setDoc(F.doc(db,'inbox',key),{uid:me});
       const col=F.collection(db,'inbox',key,'days'), seen=new Set();
       const handle=async(snapDocs)=>{
@@ -1017,7 +1019,7 @@ async function FirebaseBackend(cfg){
           F.deleteDoc(F.doc(db,'inbox',key,'days',d.id)).catch(e=>toast('⚠️ Kutu temizlenemedi: '+e.code)); }
         if(docs.length) toast(`📬 Arka planda gelen ${docs.length} saat kaydı işlendi`,4000);
         return docs.length; };
-      be.checkInbox=async(loud)=>{ try{ const sn=await F.getDocsFromServer?F.getDocsFromServer(col):F.getDocs(col); const n=await handle(sn.docs); state.inboxErr=null; state.inboxOk=true; if(loud&&!n) toast('📭 Kutu boş, yeni kayıt yok.'); render(); }
+      be.checkInbox=async(loud)=>{ try{ const sn=await (F.getDocsFromServer?F.getDocsFromServer(col):F.getDocs(col)); const n=await handle(sn.docs); state.inboxErr=null; state.inboxOk=true; if(loud&&!n) toast('📭 Kutu boş, yeni kayıt yok.'); render(); }
         catch(e){ state.inboxErr='okuma: '+(e.code||e.message); render(); if(loud) toast('⚠️ Kutu okunamadı: '+(e.code||e.message),5000); } };
       state.inboxStep='dinleme';
       unsubs.push(F.onSnapshot(col,snap=>handle(snap.docs),e=>{ state.inboxErr='dinleme: '+e.code; render(); }));
