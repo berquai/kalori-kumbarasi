@@ -867,7 +867,7 @@ async function FirebaseBackend(cfg){
 
 /* ---------- Kestirme ---------- */
 let pendingIngest=null;
-(()=>{ const p=new URLSearchParams(location.search); if(p.has('aktif')||p.has('adim')){ pendingIngest={date:normDate(p.get('d')),active:num(p.get('aktif')),steps:intOf(p.get('adim')),km:num(p.get('km'))}; history.replaceState(null,'',location.pathname); } })();
+(()=>{ const p=new URLSearchParams(location.search); if(p.has('aktif')||p.has('adim')){ pendingIngest={date:normDate(p.get('d')),active:num(p.get('aktif')),steps:Math.round(num(p.get('adim')))||0,km:num(p.get('km'))}; history.replaceState(null,'',location.pathname); } })();
 const healthEntry=(date,active,steps,km)=>({id:'health-'+date,date,type:'health',active:Math.round(active||0),steps:steps||0,km:isFinite(km)?Math.round(km*100)/100:0,createdAt:Date.now()});
 function processIngest(){ if(!pendingIngest) return; const p=pendingIngest; pendingIngest=null;
   if(!isFinite(p.active)) return toast('⚠️ Kestirmeden aktif enerji okunamadı.');
