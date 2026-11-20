@@ -160,6 +160,7 @@ code{background:var(--card2);padding:2px 6px;border-radius:6px;font-size:12px;wo
         <label>Ne yedin?</label>
         <input name="food" list="foodList" placeholder="Yaz: pilav, mercimek çorbası, simit…" autocomplete="off" required>
         <datalist id="foodList"></datalist>
+        <div class="chips" id="tplChips"></div>
         <div class="chips" id="freqChips"></div>
         <div class="muted small" id="foodInfo" style="margin-top:6px"></div>
         <div class="newfood" id="newFood" style="display:none">
@@ -335,7 +336,7 @@ code{background:var(--card2);padding:2px 6px;border-radius:6px;font-size:12px;wo
    Kumbara(gün) = Harcanan − Alınan  (yalnızca "kapatılan" günler)
    ============================================================ */
 const DEFAULTS = { startDate:'2026-11-20', goal:250000, dailyTarget:800, baseline:365,
-  startWeight:100, height:180, age:41, factor:1.2, foodCaution:1.10, stride:0.72, caution:0.85, ewmaDays:14, foods:[] };
+  startWeight:100, height:180, age:41, factor:1.2, foodCaution:1.10, stride:0.72, caution:0.85, ewmaDays:14, foods:[], templates:[] };
 const LS_KEY='kalori-kumbarasi-v1', SEEN_KEY='kalori-kumbarasi-seen', KCAL_PER_KG_FAT=7700;
 const MEALS={kahvalti:'🍳 Kahvaltı',ogle:'🥗 Öğle',aksam:'🍲 Akşam',ara:'🍎 Ara öğün'};
 const state={settings:{...DEFAULTS},entries:[],ready:false,user:null};
@@ -400,7 +401,10 @@ const BUILTIN=[
  ['Kavrulmuş fıstık',590,'avuç',30],['Kuru üzüm',300,'avuç',30],['Baklava',430,'dilim',40],['Künefe',350,'porsiyon',150],['Sütlaç',130,'kase',180],
  ['Kek',380,'dilim',60],['Kurabiye',480,'adet',20],['Sütlü çikolata',535,'tablet',80],['Dondurma',200,'top',50],['Lokum',350,'adet',15],
  ['Kesme şeker',400,'adet',4],['Kola / gazlı içecek',42,'kutu (330 ml)',330],['Hazır meyve suyu',45,'bardak (200 ml)',200],['Ayran',38,'bardak (200 ml)',200],
- ['Süt (tam yağlı)',61,'bardak (200 ml)',200],['Muz',90,'adet',120],['Elma',52,'adet',180],['Portakal',47,'adet',180],['Mandalina',53,'adet',90],['Mısır gevreği',380,'kase',40]
+ ['Süt (tam yağlı)',61,'bardak (200 ml)',200],
+ ['Söğüş tabağı (domates, salatalık, biber)',18,'tabak',200],['Domates',18,'adet',120],['Salatalık',15,'adet',150],['Sivri biber',20,'adet',10],
+ ['Maydanoz',36,'avuç',15],['Roka',25,'avuç',20],['Yeşil zeytin',145,'adet',5],['Tahin',595,'yemek kaşığı',15],['Pekmez',290,'yemek kaşığı',20],
+ ['Lor peyniri',100,'yemek kaşığı',20],['Haşlanmış patates',87,'adet',150],['Avokado',160,'adet',150],['Çay (şekersiz)',1,'bardak',100],['Muz',90,'adet',120],['Elma',52,'adet',180],['Portakal',47,'adet',180],['Mandalina',53,'adet',90],['Mısır gevreği',380,'kase',40]
 ].map(([n,k,u,ug])=>({n,k,u,ug,src:'',builtin:true}));
 function normFood(f){ const k100=f.k>0?+f.k:(f.uk>0&&f.ug>0?f.uk/f.ug*100:null); const ukc=f.uk>0?+f.uk:(f.k>0&&f.ug>0?f.k*f.ug/100:null); return {...f,k100,ukc}; }
 function allFoods(){ const m=new Map(BUILTIN.map(f=>[lc(f.n),f])); for(const f of (state.settings.foods||[])) m.set(lc(f.n),{...f,builtin:false}); return [...m.values()].map(normFood); }
@@ -593,7 +597,7 @@ function mealsHTML(date){
     const items=list.filter(e=>(e.meal||'ara')===k&&e.type==='eat'); const sum=items.reduce((a,e)=>a+e.kcal,0);
     const yHas=state.entries.some(e=>e.date===y&&e.type==='eat'&&e.meal===k);
     return `<div class="meal"><div class="meal-h"><span>${label} <small>${items.length?fmt(sum)+' kcal':''}</small></span>
-      <span>${!items.length&&yHas?`<button class="btn sm ghost" data-copy="${y}|${date}|${k}">⧉ dünden kopyala</button>`:''}<button class="btn sm" data-addmeal="${date}|${k}">+</button></span></div>
+      <span>${items.length>1?`<button class="btn sm ghost" data-tpl="${date}|${k}" title="Şablon olarak kaydet">⭐</button> `:''}${!items.length&&yHas?`<button class="btn sm ghost" data-copy="${y}|${date}|${k}">⧉ dünden kopyala</button>`:''}<button class="btn sm" data-addmeal="${date}|${k}">+</button></span></div>
       ${items.map(e=>`<div class="line"><span>${esc(e.food)} <span class="muted small">${esc(qtyTxt(e))}</span></span><span><b>${fmt(e.kcal)}</b><button class="x" data-del="${e.id}">×</button></span></div>`).join('')}</div>`;
   }).join('') + list.filter(e=>e.type!=='eat').map(e=>`<div class="line"><span>🎉 Ekstra: ${esc(e.note||'—')}</span><span><b>${fmt(intakeOf(e))}</b><button class="x" data-del="${e.id}">×</button></span></div>`).join('');
 }
@@ -686,6 +690,7 @@ function fillFoodUI(){
   $('#foodList').innerHTML=allFoods().map(f=>`<option value="${esc(f.n)}">`).join('');
   const cnt=new Map(); for(const e of state.entries) if(e.type==='eat') cnt.set(e.food,(cnt.get(e.food)||0)+1);
   const top=[...cnt.entries()].sort((a,b)=>b[1]-a[1]).slice(0,8).map(x=>x[0]);
+  $('#tplChips').innerHTML=(state.settings.templates||[]).map((t,i)=>`<button type="button" class="chip active" data-usetpl="${i}">⭐ ${esc(t.n)} · ${fmt(t.items.reduce((a,x)=>a+x.kcal,0))} kcal</button><button type="button" class="x" data-deltpl="${i}" aria-label="Şablonu sil">×</button>`).join('');
   $('#freqChips').innerHTML=top.map(n=>`<button type="button" class="chip" data-freq="${esc(n)}">${esc(n)}</button>`).join('');
 }
 
@@ -822,7 +827,7 @@ $('#histSeg').addEventListener('click',e=>{const b=e.target.closest('[data-h]');
 function closeDay(d){ const p=lastSt?.series.find(x=>x.d===d); if(p&&!p.hasFood&&!confirm(`${trDate(d,{day:'numeric',month:'long'})} için hiç yemek yazılmamış. Yine de kapatılsın mı?`)) return;
   backend.put({id:'close-'+d,date:d,type:'close',createdAt:Date.now()}); const v=p?Math.round(p.deficit):0; toast(v>=0?`✅ Gün kapandı: kumbaraya ${sgn(v)} kcal 🐷`:`📒 Gün kapandı: ${sgn(v)} kcal. Yarın yeni bir sayfa.`,4000); }
 document.addEventListener('click',e=>{
-  const t=e.target.closest('[data-go],[data-del],[data-close],[data-reopen],[data-copy],[data-addmeal],[data-edit],[data-delfood],#formSeg [data-f]'); if(!t) return;
+  const t=e.target.closest('[data-go],[data-del],[data-close],[data-reopen],[data-copy],[data-addmeal],[data-edit],[data-delfood],[data-tpl],[data-usetpl],[data-deltpl],#formSeg [data-f]'); if(!t) return;
   if(t.dataset.f && t.closest('#formSeg')) return setForm(t.dataset.f);
   if(t.dataset.go) return go(t.dataset.go,t.dataset.form);
   if(t.dataset.del){ if(confirm('Bu kayıt silinsin mi?')) backend.del(t.dataset.del); return; }
@@ -830,6 +835,14 @@ document.addEventListener('click',e=>{
   if(t.dataset.reopen){ backend.del('close-'+t.dataset.reopen); toast('Gün yeniden açıldı'); return; }
   if(t.dataset.copy){ const [from,to,meal]=t.dataset.copy.split('|'); const src=state.entries.filter(e=>e.date===from&&e.type==='eat'&&e.meal===meal);
     backend.putMany(src.map(e=>({...e,id:uid(),date:to,createdAt:Date.now()}))); toast(`⧉ ${src.length} kalem kopyalandı`); return; }
+  if(t.dataset.tpl){ const [d,m]=t.dataset.tpl.split('|'); const items=state.entries.filter(e=>e.date===d&&e.type==='eat'&&e.meal===m);
+    const name=prompt('Şablon adı (örn. Hafta içi kahvaltım):', MEALS[m].replace(/^\S+\s/,'')+' şablonum'); if(!name) return;
+    const s={...state.settings}; s.templates=[...(s.templates||[]).filter(x=>lc(x.n)!==lc(name)),{n:name.trim(),items:items.map(e=>({food:e.food,qty:e.qty,unit:e.unit,uname:e.uname||'',pct:e.pct,kcal:e.kcal}))}];
+    backend.saveSettings(s); toast(`⭐ “${esc(name)}” şablonu kaydedildi (${items.length} kalem)`); return; }
+  if(t.dataset.usetpl){ const tp=(state.settings.templates||[])[+t.dataset.usetpl]; if(!tp) return; const f=$('#f-eat');
+    backend.putMany(tp.items.map(x=>({...x,id:uid(),date:f.elements.date.value,meal:f.elements.meal.value,type:'eat',createdAt:Date.now()})));
+    toast(`⭐ ${esc(tp.n)}: ${tp.items.length} kalem, ${fmt(tp.items.reduce((a,x)=>a+x.kcal,0))} kcal deftere yazıldı`); return; }
+  if(t.dataset.deltpl){ const s={...state.settings}; const tp=(s.templates||[])[+t.dataset.deltpl]; if(!tp||!confirm(`“${tp.n}” şablonu silinsin mi?`)) return; s.templates=s.templates.filter((_,i)=>i!==+t.dataset.deltpl); backend.saveSettings(s); return; }
   if(t.dataset.addmeal){ const [d,m]=t.dataset.addmeal.split('|'); go('add','eat'); const f=$('#f-eat'); f.elements.date.value=d; f.elements.meal.value=m; f.elements.food.focus(); return; }
   if(t.dataset.edit){ const fd=findFood(t.dataset.edit); const f=$('#f-cetvel'); f.elements.orig.value=fd.builtin?'':fd.n; f.elements.n.value=fd.n; f.elements.k.value=fd.k||''; f.elements.uk.value=fd.uk||''; f.elements.u.value=fd.u||''; f.elements.ug.value=fd.ug||''; f.elements.src.value=fd.src||'';
     $('#cfTitle').textContent=fd.builtin?'Hazır değeri doğrula / düzelt':'Kaydı düzenle'; f.scrollIntoView({behavior:'smooth'}); return; }
