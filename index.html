@@ -102,14 +102,41 @@ input:focus,select:focus{outline:2px solid rgba(244,185,66,.6);border-color:tran
 .cvwarn{color:var(--red);font-size:12px;display:block}
 .newfood{border:1px dashed var(--gold);border-radius:14px;padding:4px 12px 12px;margin-top:12px}
 .vit{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line);font-size:14.5px;line-height:1.4}
-.vit:first-child{border-top:0}.vit .e{font-size:24px;line-height:1}
-.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
-.badge{background:var(--card2);border-radius:14px;padding:10px 8px;text-align:center;border:1px solid var(--line)}
-.badge .e{font-size:30px;display:block;margin-bottom:4px}
+.vit:first-child,.row+.vit{border-top:0}.vtag{display:block;font-size:10px;letter-spacing:.12em;font-weight:800;color:var(--gold);margin-bottom:2px}.vit .e{font-size:24px;line-height:1}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+.badge{background:var(--card2);border-radius:16px;padding:14px 6px 12px;text-align:center;border:1px solid var(--line);position:relative;overflow:hidden}
 .badge .n{font-size:12px;font-weight:700;line-height:1.2}
 .badge .d{font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.25}
-.badge.off .e{filter:grayscale(1);opacity:.35}.badge.off .n{color:var(--muted)}
-.badge.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px rgba(244,185,66,.25)}
+.badge .tier{font-size:9px;font-weight:800;letter-spacing:.14em;margin-top:5px;text-transform:uppercase}
+.badge .pct{font-size:10px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums}
+.badge.off .n{color:var(--muted)}
+.t1 .tier{color:#c27a43}.t2 .tier{color:#8f9bab}.t3 .tier{color:var(--gold)}
+.t4 .tier{background:linear-gradient(90deg,#b07a1a,#ffd86b,#b07a1a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.medal{--sz:60px;width:var(--sz);height:var(--sz);margin:2px auto 10px;border-radius:50%;position:relative;display:grid;place-items:center;isolation:isolate}
+.medal .core{width:calc(var(--sz) - 10px);height:calc(var(--sz) - 10px);border-radius:50%;display:grid;place-items:center;position:relative;overflow:hidden}
+.medal .e{font-size:calc(var(--sz) * .42);line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+.on.t1 .medal{background:conic-gradient(from 200deg,#7c4220,#e7a873,#9a5a2c,#f4c093,#7c4220);box-shadow:0 3px 8px rgba(0,0,0,.28)}
+.on.t1 .core{background:radial-gradient(circle at 35% 30%,#f8d0a8,#c47c45 58%,#86491f);box-shadow:inset 0 0 0 2px rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.25)}
+.on.t2 .medal{background:conic-gradient(from 200deg,#6f7986,#f3f6f9,#98a2ae,#ffffff,#6f7986);box-shadow:0 3px 8px rgba(0,0,0,.28)}
+.on.t2 .core{background:radial-gradient(circle at 35% 30%,#ffffff,#c8d0d9 58%,#86909c);box-shadow:inset 0 0 0 2px rgba(255,255,255,.4),inset 0 -3px 6px rgba(0,0,0,.2)}
+.on.t3 .medal,.on.t4 .medal{background:conic-gradient(from 200deg,#8d5e0e,#ffe28f,#c48d1e,#fff6c8,#8d5e0e);box-shadow:0 3px 10px rgba(176,122,26,.45)}
+.on.t3 .core,.on.t4 .core{background:radial-gradient(circle at 35% 30%,#fff8d6,#f2c14e 55%,#a8701a);box-shadow:inset 0 0 0 2px rgba(255,255,255,.45),inset 0 -3px 7px rgba(110,70,0,.35)}
+.on.t3 .core::after,.on.t4 .core::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.6) 50%,transparent 62%);background-size:260% 100%;animation:sheen 5s ease-in-out infinite}
+@keyframes sheen{0%{background-position:160% 0}55%,100%{background-position:-60% 0}}
+.t4 .medal{--sz:72px;margin-top:12px}
+.on.t4 .medal{box-shadow:0 0 0 2px rgba(255,216,107,.35),0 0 22px rgba(244,185,66,.55),0 4px 12px rgba(0,0,0,.35)}
+.t4 .medal::before{content:'';position:absolute;top:-16px;left:50%;transform:translateX(-50%);width:30px;height:24px;z-index:-1;clip-path:polygon(0 0,100% 0,100% 100%,50% 72%,0 100%);background:linear-gradient(90deg,#9e1b25 0 34%,#f2c14e 34% 66%,#9e1b25 66%)}
+.off.t4 .medal::before{filter:grayscale(1);opacity:.35}
+.medal .laurel{position:absolute;inset:-13px;width:calc(100% + 26px);height:calc(100% + 26px);z-index:2;pointer-events:none}
+.off .laurel{filter:grayscale(1);opacity:.3}
+.on.t4{border-color:#e9b949;background:radial-gradient(120% 70% at 50% 0%,rgba(244,197,66,.22),transparent 65%),var(--card2)}
+.on.t3{border-color:rgba(233,185,73,.6)}.on.t2{border-color:rgba(160,172,186,.55)}.on.t1{border-color:rgba(196,124,69,.5)}
+.badge.off .medal{background:conic-gradient(var(--gold) var(--p),var(--track) 0)}
+.badge.off .core{background:var(--card);box-shadow:inset 0 2px 6px rgba(0,0,0,.25)}
+.badge.off .e{filter:grayscale(1);opacity:.35}
+.tiercount{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:13px}
+.tiercount span{display:flex;align-items:center;gap:6px}.tiercount i{width:14px;height:14px;border-radius:50%;display:inline-block}
+@media (prefers-reduced-motion:reduce){.on.t3 .core::after,.on.t4 .core::after{animation:none}}
 .mini{height:4px;background:var(--track);border-radius:9px;margin-top:6px;overflow:hidden}.mini i{display:block;height:100%;background:var(--gold)}
 .meal{margin-top:12px}
 .meal-h{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:14px;margin-bottom:2px}
@@ -290,12 +317,14 @@ code{background:var(--card2);padding:2px 6px;border-radius:6px;font-size:12px;wo
     <div class="card">
       <h2>Program</h2>
       <form id="f-settings">
+        <label>Günün hedefi nasıl belirlensin?</label>
+        <select name="targetMode"><option value="remain">📅 Kalan ortalama: kalan kcal ÷ kalan gün (yumuşak)</option><option value="w7">⚡ 7 günde telafi: gerideysen eksik 7 güne yayılır, öndeysen kalan ortalama</option><option value="fixed">📌 Sabit: her gün kişisel plan</option></select>
         <div class="g2">
           <div><label>Başlangıç tarihi</label><input type="date" name="startDate"></div>
           <div><label>Hedef (kcal)</label><input type="number" name="goal" inputmode="numeric"></div>
         </div>
         <div class="g2">
-          <div><label>Günlük kişisel hedef</label><input type="number" name="dailyTarget" inputmode="numeric"></div>
+          <div><label>Kişisel plan (kcal/gün)</label><input type="number" name="dailyTarget" inputmode="numeric"></div>
           <div><label>Taban aktif enerji (kcal/gün)</label><input type="number" name="baseline" inputmode="numeric"></div>
         </div>
         <div class="g3">
@@ -357,7 +386,7 @@ code{background:var(--card2);padding:2px 6px;border-radius:6px;font-size:12px;wo
    KALORİ KUMBARASI v2 — tam yemek günlüğü modeli
    Kumbara(gün) = Harcanan − Alınan  (yalnızca "kapatılan" günler)
    ============================================================ */
-const DEFAULTS = { startDate:'2026-11-20', goal:250000, dailyTarget:800, baseline:365,
+const DEFAULTS = { startDate:'2026-11-20', goal:250000, dailyTarget:800, targetMode:'remain', baseline:365,
   startWeight:100, height:180, age:41, factor:1.2, foodCaution:1.10, stride:0.72, caution:0.85, ewmaDays:14, foods:[], templates:[] };
 const LS_KEY='kalori-kumbarasi-v1', SEEN_KEY='kalori-kumbarasi-seen', KCAL_PER_KG_FAT=7700;
 const MEALS={kahvalti:'🍳 Kahvaltı',ogle:'🥗 Öğle',aksam:'🍲 Akşam',ara:'🍎 Ara öğün'};
@@ -456,7 +485,12 @@ function computeStats(){
   const nDays=Math.max(1,dayDiff(start,today)+1);
   const series=[]; let cum=0;
   let footKm=0,steps=0,bikeKm=0,strengthN=0,extraN=0,maxDayK=-Infinity,maxDayKm=0,maxDaySteps=0,posDays=0,winterDays=0,closedN=0,comeback=false,underBmrDays=0;
-  const unclosed=[];
+  const unclosed=[], plannedEnd0=addDays(start,364), base0=s.goal/365;
+  /* Günün hedefi: 'remain' = kalan kcal ÷ kalan gün; 'w7' = gerideysen eksik 7 günde telafi, öndeysen fazlalık kalan güne yayılır (ihtiyatlı); 'fixed' = sabit plan */
+  const targetFor=(i,cumBefore)=>{ if(s.targetMode==='fixed') return s.dailyTarget; const DL=Math.max(1,365-i), behind=base0*Math.min(i,365)-cumBefore;
+    if(s.targetMode==='w7'&&behind>0) return base0+behind/Math.min(7,DL);
+    return Math.max(0,s.goal-cumBefore)/DL; };
+  let hitDays=0;
   for(let i=0;i<nDays;i++){
     const d=addDays(start,i), list=by.get(d)||[], w=Math.max(50,s.startWeight-Math.max(0,cum)/KCAL_PER_KG_FAT);
     let active=null,dsteps=0,dkm=0,actK=0,intake=0,hasFood=false;
@@ -467,14 +501,14 @@ function computeStats(){
     }
     const base=bmr(w)*s.factor, watch=active==null?-s.baseline:active-s.baseline;
     const burn=base+watch+actK, intakeAdj=intake*s.foodCaution, deficit=burn-intakeAdj;
-    const closed=closedSet.has(d), v=closed?deficit:0;
+    const closed=closedSet.has(d), v=closed?deficit:0, target=targetFor(i,cum);
     if(!closed && hasFood && d!==today) unclosed.push(d);
-    cum+=v;
-    const day={d,v,cum,closed,deficit,burn,base,watch,actK,intake,intakeAdj,active,hasFood,footKm:dkm,steps:dsteps,w,bmr:bmr(w)};
+    cum+=v; if(closed&&deficit>=target) hitDays++;
+    const day={d,i,v,cum,closed,deficit,burn,base,watch,actK,intake,intakeAdj,active,hasFood,footKm:dkm,steps:dsteps,w,bmr:bmr(w),target};
     series.push(day);
     footKm+=dkm; steps+=dsteps; maxDayKm=Math.max(maxDayKm,dkm); maxDaySteps=Math.max(maxDaySteps,dsteps);
     if(closed){ closedN++; maxDayK=Math.max(maxDayK,deficit); if(deficit>0){ posDays++; const m=+d.slice(5,7); if(m===12||m<=2) winterDays++; } if(intake<bmr(w)) underBmrDays++;
-      const prev=series[series.length-2]; if(prev&&prev.closed&&prev.deficit<0&&deficit>=s.dailyTarget) comeback=true; }
+      const prev=series[series.length-2]; if(prev&&prev.closed&&prev.deficit<0&&deficit>=target) comeback=true; }
   }
   const T=series[series.length-1], total=cum, todayClosed=T.closed;
   const N=Math.max(2,+s.ewmaDays||14), a=2/(N+1); let ew=null;
@@ -490,11 +524,12 @@ function computeStats(){
   const streak=(test)=>{ let cur=0,best=0; const used={};
     for(const p of span){ if(test(p)){cur++;best=Math.max(best,cur);} else { const m=p.d.slice(0,7); if(cur>0&&(used[m]||0)<2) used[m]=(used[m]||0)+1; else cur=0; } }
     return {cur,best,left:2-(used[today.slice(0,7)]||0)}; };
-  const stPos=streak(p=>p.closed&&p.v>0), stTgt=streak(p=>p.closed&&p.v>=s.dailyTarget), stLog=streak(p=>p.closed);
+  const stPos=streak(p=>p.closed&&p.v>0), stTgt=streak(p=>p.closed&&p.v>=p.target), stLog=streak(p=>p.closed);
   const last30=series.slice(-30);
+  const cumAfterToday=T.closed?T.cum:T.cum+T.deficit, tomorrowTarget=targetFor(T.i+1,cumAfterToday);
   const own=(s.foods||[]);
   return {s,today,start,nDays,series,T,total,remaining,todayClosed,pace,avg,eta,etaDays,ahead,plannedEnd,daysLeft,required,planDiff,
-    stPos,stTgt,stLog,footKm,steps,bikeKm,strengthN,extraN,maxDayK:isFinite(maxDayK)?maxDayK:0,maxDayKm,maxDaySteps,posDays,winterDays,closedN,comeback,underBmrDays,unclosed,
+    tomorrowTarget,hitDays,stPos,stTgt,stLog,footKm,steps,bikeKm,strengthN,extraN,maxDayK:isFinite(maxDayK)?maxDayK:0,maxDayKm,maxDaySteps,posDays,winterDays,closedN,comeback,underBmrDays,unclosed,
     km30:last30.reduce((x,p)=>x+p.footKm,0),steps30:last30.reduce((x,p)=>x+p.steps,0),
     fatG:Math.max(0,total)/7.7, heightM:Math.max(0,total)*4184*0.25/(Math.max(50,s.startWeight-Math.max(0,total)/KCAL_PER_KG_FAT)*9.81),
     ownFoods:own.length, srcFoods:own.filter(f=>f.src&&f.src.trim()).length};
@@ -504,64 +539,88 @@ function computeStats(){
 const FAT_OBJ=[['🥚','yumurta',60],['🧼','banyo sabunu',125],['🍎','elma',180],['📱','akıllı telefon',200],['🧈','paket tereyağı (250 g)',250],['⚽','futbol topu',430],
  ['🏀','basketbol topu',620],['🍬','paket toz şeker (1 kg)',1000],['💻','dizüstü bilgisayar',1500],['🐈','ev kedisi',4000],['🎳','bowling topu',7000],
  ['🍉','orta boy karpuz',8000],['🛞','otomobil lastiği',10000],['🧳','uçak bagajı (20 kg)',20000],['🌾','çuval un (25 kg)',25000]];
-const HEIGHTS=[['🗼','Galata Kulesi',63],['🗼','Eyfel Kulesi',330],['📡','Çamlıca Kulesi',369],['🏙️','Empire State Binası',443],['🏙️','Burj Khalifa',828],
+const HEIGHTS=[['🗼','Galata Kulesi',63],['🗼','Eyfel Kulesi',330],['📡','Çamlıca Kulesi',369],['🏙️','Empire State Binası',443],['🚡','Ordu Boztepe',530],['🏙️','Burj Khalifa',828],
  ['⛰️','Uludağ',2543],['🏔️','Erciyes',3917],['🏔️','Ağrı Dağı',5137],['🏔️','Everest',8849],['✈️','Yolcu uçağı seyir irtifası',11000],
  ['🚀','Kármán hattı (uzayın sınırı)',100000],['🛰️','Uluslararası Uzay İstasyonu',400000]];
 const ROUTES=[['🏅','Yarı maraton',21.1],['🌉','İstanbul Boğazı boyu',31],['⛴️','Manş Denizi (Dover–Calais)',33],['🏛️','Maraton (Pheidippides’in yolu)',42.195],
  ['🌰','Ordu → Giresun',46],['🌊','Çanakkale Boğazı boyu',61],['🚢','Ordu → Samsun',160],['🏛️','On Binler’in izinde: Trapezus → Kotyora',180],
  ['🎖️','Samsun → Ankara',410],['🥾','Likya Yolu',540],['🏛️','Ordu → Ankara',560],['⛪','Camino Francés (Santiago yolu)',780],['🌉','Ordu → İstanbul',890],
  ['🏞️','Kızılırmak boyu',1355],['🇹🇷','Türkiye’nin batı–doğu genişliği',1600],['🏞️','Fırat boyu',2800],['🏞️','Tuna boyu',2850]];
-const FOODEQ=[['🥯','simit',300],['🫓','lahmacun',265],['🍯','dilim baklava',170],['🥤','kutu kola',140],['🌰','avuç fındık',190]];
+const FOODEQ=[['🥯','simit',300],['🫓','lahmacun',265],['🍯','dilim baklava',170],['🥤','kutu kola',140],['🌰','avuç fındık',190],
+ ['🍕','dilim pizza',300],['🍫','tablet sütlü çikolata',430],['🍦','top dondurma',100],['🍌','muz',105],['🧇','dilim su böreği',335],['🍮','kase sütlaç',235]];
+let vitShift=0;
 function vitrin(st){
-  const L=[],t=Math.max(0,st.total), day=dayDiff('2026-01-01',st.today);
-  if(t<=0){ L.push(['🐷','Kumbara ilk kapanan günü bekliyor. Günün sonunda “Günü kapat” demeyi unutma.']); return L; }
-  const fits=FAT_OBJ.filter(o=>st.fatG>=o[2]);
-  if(fits.length){ const o=fits[fits.length-1]; L.push([o[0],`<b>${fmt(st.fatG)} g</b> yağ eridi: <b>${fmt1(st.fatG/o[2])}</b> ${o[1]} ağırlığında.`]);
-    if(fits.length>1){ const r=fits[day%(fits.length-1)]; L.push([r[0],`Ya da <b>${fmt(st.fatG/r[2])}</b> ${r[1]}. Büyük kısmı CO₂ olarak nefesle gitti.`]); } }
-  else L.push(['🥚',`<b>${fmt(st.fatG)} g</b> yağ eridi. Bir yumurta ağırlığına %${fmt(100*st.fatG/60)} yoldasın.`]);
-  const hi=HEIGHTS.filter(h=>st.heightM>=h[2]), nx=HEIGHTS.find(h=>st.heightM<h[2]);
-  L.push(['🧗',`Bu enerjiyle (kas verimi ~%25) kendini <b>${fmt(st.heightM)} m</b> yukarı taşıyabilirdin${hi.length?` — ${hi[hi.length-1][1]} × <b>${fmt1(st.heightM/hi[hi.length-1][2])}</b>`:''}.${nx?` Sıradaki: ${nx[0]} ${nx[1]} (%${fmt(100*st.heightM/nx[2])}).`:''}`]);
-  L.push(['☕',`<b>${fmt(t/80)} litre</b> suyu 20 °C’den kaynatacak enerji: ${fmt(t/160)} çaydanlık çay.`]);
-  const f=FOODEQ[day%FOODEQ.length]; L.push([f[0],`Eşdeğeri: <b>${fmt1(t/f[2])}</b> ${f[1]}.`]);
-  L.push(['⛽',`<b>${fmt1(t/8170)} L</b> benzin enerjisi: bir otomobil ~<b>${fmt(t/8170/6.5*100)} km</b> giderdi.`]);
-  if(st.footKm>0){ const r=ROUTES.filter(r=>st.footKm>=r[2]), n=ROUTES.find(r=>st.footKm<r[2]);
-    L.push(['👣',`Toplam <b>${fmt1(st.footKm)} km</b> yürüdün/koştun${r.length?` — ${r[r.length-1][1]} tamam`:''}.${n?` Sıradaki: ${n[1]} (%${fmt(100*st.footKm/n[2])}).`:''}`]); }
-  if(st.steps30>0) L.push(['📏',`Son 30 günde <b>${fmt(st.steps30)} adım</b>, <b>${fmt1(st.km30)} km</b>.`]);
-  return L;
+  const t=Math.max(0,st.total), day=dayDiff('2026-01-01',st.today), J=t*4184, s=st.s;
+  if(t<=0) return [['🐷','BAŞLANGIÇ','Kumbara ilk kapanan günü bekliyor. Günün sonunda “Günü kapat” demeyi unutma; vitrin o an açılır.']];
+  const head=(()=>{ const fits=FAT_OBJ.filter(o=>st.fatG>=o[2]);
+    if(!fits.length) return ['🥚','YAĞ',`<b>${fmt(st.fatG)} g</b> yağ eridi. Bir yumurta ağırlığına %${fmt(100*st.fatG/60)} yoldasın.`];
+    const o=fits[fits.length-1]; return [o[0],'YAĞ',`<b>${fmt(st.fatG)} g</b> yağ eridi: <b>${fmt1(st.fatG/o[2])}</b> ${o[1]} ağırlığında.`]; })();
+  const C=st.series.filter(p=>p.closed), best=C.reduce((b,p)=>!b||p.deficit>b.deficit?p:b,null), wk=C.filter(p=>dayDiff(p.d,st.today)<7).reduce((a,p)=>a+p.deficit,0);
+  const pool=[
+    ()=>{ const fits=FAT_OBJ.filter(o=>st.fatG>=o[2]); if(fits.length<2) return null; const r=fits[(day+vitShift)%(fits.length-1)];
+      return [r[0],'YAĞ',`Ya da <b>${fmt(st.fatG/r[2])}</b> ${r[1]}. Bu yağın ~%84’ü karbondioksit olarak nefesinle havaya karıştı.`]; },
+    ()=>{ const hi=HEIGHTS.filter(h=>st.heightM>=h[2]), nx=HEIGHTS.find(h=>st.heightM<h[2]);
+      return ['🧗','FİZİK',`Bu enerjiyle (kas verimi ~%25) kendini <b>${fmt(st.heightM)} m</b> yukarı taşıyabilirdin${hi.length?` — ${hi[hi.length-1][1]} × <b>${fmt1(st.heightM/hi[hi.length-1][2])}</b>`:''}.${nx?` Sıradaki: ${nx[0]} ${nx[1]} (%${fmt(100*st.heightM/nx[2])}).`:''}`]; },
+    ()=>['☕','MUTFAK',`<b>${fmt(t/80)} litre</b> suyu 20 °C’den kaynatacak enerji: <b>${fmt(t/8)}</b> ince belli bardak çay.`],
+    ()=>{ const f=FOODEQ[(day+vitShift)%FOODEQ.length]; return [f[0],'SOFRA',`Kumbaradaki enerji <b>${fmt1(t/f[2])}</b> ${f[1]} ediyor. Hepsini yememiş olmak da bir başarı.`]; },
+    ()=>['🌰','ORDU',`<b>${fmt(t/9)}</b> tane Ordu fındığı. Bir fındık ~9 kcal; Türkiye dünya fındığının yarısından fazlasını, en çok da Ordu’dan üretir.`],
+    ()=>['⛽','ENERJİ',`<b>${fmt1(t/8170)} L</b> benzin enerjisi: bir otomobil ~<b>${fmt1(t/8170/6.5*100)} km</b> giderdi. Sen aynı enerjiyi kendi motorunla harcadın.`],
+    ()=>['📱','ENERJİ',`Bir akıllı telefonu (~13 Wh) <b>${fmt(J/46800)}</b> kez sıfırdan doldurmaya yeterdi.`],
+    ()=>{ const h=J/10/3600; return ['💡','ENERJİ',`10 W’lık bir LED ampulü <b>${h>=48?fmt1(h/24)+' gün':fmt(h)+' saat'}</b> aralıksız yakardı.`]; },
+    ()=>['🧠','BEDEN',`Beynin ~20 W ile çalışır. Kumbaradaki enerji onu <b>${fmt1(J/20/86400)} gün</b> düşündürmeye yeterdi.`],
+    ()=>['🫀','BEDEN',`Bu, senin <b>${fmt1(t/st.T.bmr)}</b> günlük bazal metabolizman: hiç kıpırdamadan yaşadığın günlerin enerjisi.`],
+    ()=>{ const n=J*0.25/(20*9.81); return ['🧳','FİZİK',`20 kg’lık bir bavulu yerden 1 metreye <b>${fmt(n)}</b> kez kaldırmaya yeterdi.`]; },
+    ()=>st.footKm>0?(()=>{ const r=ROUTES.filter(r=>st.footKm>=r[2]), n=ROUTES.find(r=>st.footKm<r[2]);
+      return ['👣','YOL',`Toplam <b>${fmt1(st.footKm)} km</b> yürüdün/koştun${r.length?` — ${r[r.length-1][1]} tamam`:''}.${n?` Sıradaki: ${n[0]} ${n[1]} (%${fmt(100*st.footKm/n[2])}).`:''}`]; })():null,
+    ()=>st.footKm>0?['🏛️','TARİH',`Ksenophon’un On Binleri günde ~5 parasang (~27 km) yürürdü. Senin toplamın onların <b>${fmt1(st.footKm/27)}</b> günlük yürüyüşü.`]:null,
+    ()=>st.steps30>0?['📏','YOL',`Son 30 günde <b>${fmt(st.steps30)} adım</b>, <b>${fmt1(st.km30)} km</b>. Ortalaman günde <b>${fmt(st.steps30/Math.min(30,st.nDays))}</b> adım.`]:null,
+    ()=>best?['🏆','REKOR',`En iyi günün <b>${trDate(best.d,{day:'numeric',month:'long'})}</b>: <b>${sgn(best.deficit)} kcal</b>. ${best.deficit>=1000?'Bin kaloriyi aşan bir gün!':'Onu geçecek gün yakın.'}`]:null,
+    ()=>C.length?['📆','HAFTA',`Son 7 günde kumbaraya <b>${sgn(wk)} kcal</b> girdi: <b>${fmt(Math.max(0,wk)/7.7)} g</b> yağ.`]:null,
+    ()=>st.stPos.cur>=2?['🔗','SERİ',`<b>${st.stPos.cur}</b> gündür kumbara hep büyüyor. Zinciri kırma.`]:null,
+    ()=>st.hitDays?['🎯','HEDEF',`Şimdiye kadar <b>${st.hitDays}</b> kez günün hedefini tuttun. Kapanan günlerin %${fmt(100*st.hitDays/Math.max(1,st.closedN))}’i.`]:null,
+  ].map(f=>f()).filter(Boolean);
+  const k=Math.min(6,pool.length), start=((day*5+vitShift*k)%pool.length+pool.length)%pool.length;
+  return [head,...Array.from({length:k},(_,j)=>pool[(start+j)%pool.length])];
 }
 
 /* ---------- rozetler ---------- */
 function badges(st){
-  const s=st.s,L=[]; const add=(cat,e,n,d,val,target)=>L.push({id:`${cat}|${n}`,cat,e,n,d,val:Math.max(0,val),target,done:val>=target});
-  [[1000,'🪙','İlk bin','Kumbarada 1.000 kcal'],[KCAL_PER_KG_FAT,'🔥','İlk kilo','1 kg yağ dokusu kadar enerji'],[s.goal*.1,'🥉','Onda bir','Hedefin %10’u'],
+  const s=st.s,L=[]; let ser=0; const add=(cat,e,n,d,val,target)=>L.push({id:`${cat}|${n}`,ser,cat,e,n,d,val:Math.max(0,val),target,done:val>=target});
+  ser++; [[1000,'🪙','İlk bin','Kumbarada 1.000 kcal'],[KCAL_PER_KG_FAT,'🔥','İlk kilo','1 kg yağ dokusu kadar enerji'],[s.goal*.1,'🥉','Onda bir','Hedefin %10’u'],
    [s.goal*.25,'🥈','Çeyrek','Hedefin dörtte biri'],[s.goal*.5,'🥇','Yarı yol','Hedefin yarısı'],[s.goal*.75,'💎','Dörtte üç','Son düzlük'],
    [s.goal,'🏆','Kumbara doldu','HEDEF!'],[s.dailyTarget*365,'👑','Tam yıl temposu',`${fmt(s.dailyTarget)} × 365`],[s.goal*1.2,'🌟','Bonus %120','Hedefin ötesi']]
    .forEach(([t,e,n,d])=>add('Kumbara',e,n,d,st.total,t));
-  FAT_OBJ.forEach(([e,n,g])=>add('Eriyen yağın ağırlığı',e,n[0].toLocaleUpperCase('tr')+n.slice(1),`${g>=1000?fmt1(g/1000)+' kg':g+' g'} yağ`,st.fatG,g));
-  HEIGHTS.forEach(([e,n,h])=>add('Enerjiyle tırmanış',e,n,`${fmt(h)} m yükseklik enerjisi`,st.heightM,h));
-  ROUTES.forEach(([e,n,km])=>add('Mesafe rotaları',e,n,`${fmt1(km)} km toplam`,st.footKm,km));
-  [[100000,'🥾','100 bin adım'],[500000,'👟','Yarım milyon'],[1e6,'🎯','Milyoner'],[2e6,'🚀','İki milyon'],[3e6,'🌋','Üç milyon']].forEach(([t,e,n])=>add('Adımlar',e,n,`Toplam ${fmt(t)} adım`,st.steps,t));
-  [[10000,'🔟','On binlik gün'],[15000,'⚡','15 bin'],[20000,'💥','20 bin'],[30000,'🦶','Otuz bin']].forEach(([t,e,n])=>add('Adımlar',e,n,`Bir günde ${fmt(t)} adım`,st.maxDaySteps,t));
-  [[10,'🏃','10 km’lik gün'],[15,'🏃‍♂️','15 km’lik gün'],[21.1,'🏅','Bir günde yarı maraton'],[30,'🦅','30 km’lik gün']].forEach(([t,e,n])=>add('Günlük rekorlar',e,n,`Bir günde ${fmt1(t)} km`,st.maxDayKm,t));
-  [[500,'✨','500’lük gün'],[800,'🎯','Hedef günü'],[1000,'🔥','Bin kalorilik açık']].forEach(([t,e,n])=>add('Günlük rekorlar',e,n,`Bir günde ${fmt(t)} kcal açık`,st.maxDayK,t));
-  [1,7,30,100,200,365].forEach((t,i)=>add('Defter',['📝','📒','📚','🗂️','🏛️','📜'][i],t===1?'İlk kapanış':`${t} gün defter`,`${t} günü eksiksiz kapattın`,st.closedN,t));
-  [7,30,100].forEach((t,i)=>add('Defter',['✍️','🖋️','🪶'][i],`Aksatmayan kâtip ${t}`,`Art arda ${t} gün kapanış`,st.stLog.best,t));
-  [[5,'📖','Cetvel açıldı'],[25,'📗','Cetvel büyüyor'],[50,'📘','Kendi cetvelin'],[100,'📚','Kalori ansiklopedisi']].forEach(([t,e,n])=>add('Cetvel',e,n,`Cetvelinde ${t} kendi kaydın`,st.ownFoods,t));
-  [[10,'🔎','Kaynakçı'],[50,'🎓','Dipnot ustası']].forEach(([t,e,n])=>add('Cetvel',e,n,`${t} kaydın kaynağı yazılı`,st.srcFoods,t));
-  [3,7,14,30,60,100,180,365].forEach(t=>add('Kumbara serisi','🔗',`${t} gün`,'Art arda artı günler (ayda 2 dondurma hakkı)',st.stPos.best,t));
-  [3,7,14,30,60,100].forEach(t=>add('Hedef serisi','🎯',`${t} gün`,`Art arda ${fmt(s.dailyTarget)}+ kcal açık`,st.stTgt.best,t));
-  [[1,'🏋️','İlk kuvvet'],[8,'💪','Bir ay, haftada iki'],[26,'🦾','Çeyrek yıl'],[52,'🗽','52 seans'],[104,'⚒️','Yıl boyu, haftada iki']].forEach(([t,e,n])=>add('Kuvvet',e,n,`${t} kuvvet seansı`,st.strengthN,t));
-  [[50,'🚲','50 km pedal'],[200,'🚴','200 km pedal'],[1000,'🏁','Bin km pedal']].forEach(([t,e,n])=>add('Bisiklet',e,n,`Toplam ${t} km`,st.bikeKm,t));
-  [[7,'🌱','İlk hafta'],[30,'🌿','İlk ay'],[90,'🍂','Bir mevsim'],[180,'🌗','Yarı yıl'],[365,'🌕','Bir yıl']].forEach(([t,e,n])=>add('Zaman',e,n,`Programın ${t}. günü`,st.nDays,t));
-  [[50,'📅','50 artı gün'],[100,'🗓️','100 artı gün'],[200,'📆','200 artı gün'],[300,'🏛️','300 artı gün']].forEach(([t,e,n])=>add('Zaman',e,n,'Kumbaranın büyüdüğü günler',st.posDays,t));
-  add('Özel','❄️','Karadeniz kışına inat','Aralık–Şubat’ta 30 artı gün',st.winterDays,30);
-  add('Özel','🌧️','Yağmur da yağsa','Aralık–Şubat’ta 60 artı gün',st.winterDays,60);
-  add('Özel','📒','Dürüst muhasebeci','İlk “Ekstra”yı saklamadan yazdın',st.extraN,1);
-  add('Özel','🔄','Toparlanma','Eksi günün ertesi hedef günü',st.comeback?1:0,1);
+  ser++; FAT_OBJ.forEach(([e,n,g])=>add('Eriyen yağın ağırlığı',e,n[0].toLocaleUpperCase('tr')+n.slice(1),`${g>=1000?fmt1(g/1000)+' kg':g+' g'} yağ`,st.fatG,g));
+  ser++; HEIGHTS.forEach(([e,n,h])=>add('Enerjiyle tırmanış',e,n,`${fmt(h)} m yükseklik enerjisi`,st.heightM,h));
+  ser++; ROUTES.forEach(([e,n,km])=>add('Mesafe rotaları',e,n,`${fmt1(km)} km toplam`,st.footKm,km));
+  ser++; [[100000,'🥾','100 bin adım'],[500000,'👟','Yarım milyon'],[1e6,'🎯','Milyoner'],[2e6,'🚀','İki milyon'],[3e6,'🌋','Üç milyon']].forEach(([t,e,n])=>add('Adımlar',e,n,`Toplam ${fmt(t)} adım`,st.steps,t));
+  ser++; [[10000,'🔟','On binlik gün'],[15000,'⚡','15 bin'],[20000,'💥','20 bin'],[30000,'🦶','Otuz bin']].forEach(([t,e,n])=>add('Adımlar',e,n,`Bir günde ${fmt(t)} adım`,st.maxDaySteps,t));
+  ser++; [[10,'🏃','10 km’lik gün'],[15,'🏃‍♂️','15 km’lik gün'],[21.1,'🏅','Bir günde yarı maraton'],[30,'🦅','30 km’lik gün']].forEach(([t,e,n])=>add('Günlük rekorlar',e,n,`Bir günde ${fmt1(t)} km`,st.maxDayKm,t));
+  ser++; [[500,'✨','500’lük gün'],[800,'💫','800’lük gün'],[1000,'🔥','Bin kalorilik açık']].forEach(([t,e,n])=>add('Günlük rekorlar',e,n,`Bir günde ${fmt(t)} kcal açık`,st.maxDayK,t));
+  ser++; [1,7,30,100,200,365].forEach((t,i)=>add('Defter',['📝','📒','📚','🗂️','🏛️','📜'][i],t===1?'İlk kapanış':`${t} gün defter`,`${t} günü eksiksiz kapattın`,st.closedN,t));
+  ser++; [7,30,100].forEach((t,i)=>add('Defter',['✍️','🖋️','🪶'][i],`Aksatmayan kâtip ${t}`,`Art arda ${t} gün kapanış`,st.stLog.best,t));
+  ser++; [[5,'📖','Cetvel açıldı'],[25,'📗','Cetvel büyüyor'],[50,'📘','Kendi cetvelin'],[100,'📚','Kalori ansiklopedisi']].forEach(([t,e,n])=>add('Cetvel',e,n,`Cetvelinde ${t} kendi kaydın`,st.ownFoods,t));
+  ser++; [[10,'🔎','Kaynakçı'],[50,'🎓','Dipnot ustası']].forEach(([t,e,n])=>add('Cetvel',e,n,`${t} kaydın kaynağı yazılı`,st.srcFoods,t));
+  ser++; [3,7,14,30,60,100,180,365].forEach(t=>add('Kumbara serisi','🔗',`${t} gün`,'Art arda artı günler (ayda 2 dondurma hakkı)',st.stPos.best,t));
+  ser++; [3,7,14,30,60,100].forEach(t=>add('Hedef serisi','🎯',`${t} gün`,'Art arda günün hedefini tuttun',st.stTgt.best,t));
+  ser++; [[1,'🎯','İlk hedef günü'],[10,'🎯','10 hedef günü'],[50,'🎯','50 hedef günü'],[150,'🎯','150 hedef günü'],[250,'🎯','250 hedef günü']].forEach(([t,e,n])=>add('Hedef günleri',e,n,`${t===1?'Günün hedefini ilk kez':t+' gün'} tuttun`,st.hitDays,t));
+  ser++; [[1,'🏋️','İlk kuvvet'],[8,'💪','Bir ay, haftada iki'],[26,'🦾','Çeyrek yıl'],[52,'🗽','52 seans'],[104,'⚒️','Yıl boyu, haftada iki']].forEach(([t,e,n])=>add('Kuvvet',e,n,`${t} kuvvet seansı`,st.strengthN,t));
+  ser++; [[50,'🚲','50 km pedal'],[200,'🚴','200 km pedal'],[1000,'🏁','Bin km pedal']].forEach(([t,e,n])=>add('Bisiklet',e,n,`Toplam ${t} km`,st.bikeKm,t));
+  ser++; [[7,'🌱','İlk hafta'],[30,'🌿','İlk ay'],[90,'🍂','Bir mevsim'],[180,'🌗','Yarı yıl'],[365,'🌕','Bir yıl']].forEach(([t,e,n])=>add('Zaman',e,n,`Programın ${t}. günü`,st.nDays,t));
+  ser++; [[50,'📅','50 artı gün'],[100,'🗓️','100 artı gün'],[200,'📆','200 artı gün'],[300,'🏛️','300 artı gün']].forEach(([t,e,n])=>add('Zaman',e,n,'Kumbaranın büyüdüğü günler',st.posDays,t));
+  ser++; add('Özel','❄️','Karadeniz kışına inat','Aralık–Şubat’ta 30 artı gün',st.winterDays,30);
+  ser++; add('Özel','🌧️','Yağmur da yağsa','Aralık–Şubat’ta 60 artı gün',st.winterDays,60);
+  ser++; add('Özel','📒','Dürüst muhasebeci','İlk “Ekstra”yı saklamadan yazdın',st.extraN,1);
+  ser++; add('Özel','🔄','Toparlanma','Eksi günün ertesi hedef günü',st.comeback?1:0,1);
+  // kademe: her tanım satırı bir seridir; seri içinde kolaydan zora bronz → gümüş → altın → altın madalyon
+  const groups=new Map(); L.forEach(b=>{ if(!groups.has(b.ser)) groups.set(b.ser,[]); groups.get(b.ser).push(b); });
+  for(const g0 of groups.values()){ const g=[...g0].sort((x,y)=>x.target-y.target), n=g.length; g.forEach((b,r)=>{ b.tier=n===1?3:n===2?[2,3][r]:r===n-1?4:(r/(n-1)<1/3?1:r/(n-1)<2/3?2:3); }); }
+  const top=L.find(b=>b.id==='Kumbara|Kumbara doldu'); if(top) top.tier=4;
   return L;
 }
 
 /* ---------- çizimler ---------- */
+const TMODE={remain:'kalan ortalama',w7:'eksik 7 günde telafi',fixed:'sabit plan'};
 function ring(p){const r=52,c=2*Math.PI*r,v=Math.max(0,Math.min(1,p));
   return `<svg viewBox="0 0 120 120" class="ring"><circle cx="60" cy="60" r="${r}" class="ring-bg"/><circle cx="60" cy="60" r="${r}" class="ring-fg" stroke-dasharray="${(c*v).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 60 60)"/><text x="60" y="66" text-anchor="middle" font-size="26">🐷</text></svg>`;}
 function chartSVG(st){
@@ -581,13 +640,13 @@ function chartSVG(st){
    <div class="legend"><span><i style="background:var(--gold)"></i>Kumbara</span><span><i style="background:var(--green)"></i>Tempo projeksiyonu</span><span><i style="background:var(--blue)"></i>${fmt(s.dailyTarget)}/gün planı</span><span><i style="background:var(--muted)"></i>Zorunlu çizgi</span></div>`;
 }
 function barsSVG(st){
-  const s=st.s,d=st.series.slice(-30),W=340,H=110,P={l:6,r:6,t:8,b:16}, M=Math.max(s.dailyTarget*1.25,...d.map(p=>Math.abs(p.v)));
+  const s=st.s,d=st.series.slice(-30),W=340,H=110,P={l:6,r:6,t:8,b:16}, tg=st.T.target, M=Math.max(tg*1.25,...d.map(p=>Math.abs(p.v)));
   const bw=(W-P.l-P.r)/30, zero=H-P.b-(H-P.t-P.b)*0.18, sc=v=>(zero-P.t)*v/M;
   const bars=d.map((p,i)=>{const h=sc(Math.abs(p.v)),X=P.l+(30-d.length+i)*bw+1;
     if(!p.closed) return p.hasFood?`<rect x="${X}" y="${zero-3}" width="${bw-2}" height="3" rx="1" style="fill:var(--muted)"/>`:'';
-    return p.v>=0?`<rect x="${X}" y="${zero-h}" width="${bw-2}" height="${h}" rx="2" style="fill:${p.v>=s.dailyTarget?'var(--green)':'var(--gold)'}"/>`
+    return p.v>=0?`<rect x="${X}" y="${zero-h}" width="${bw-2}" height="${h}" rx="2" style="fill:${p.v>=p.target?'var(--green)':'var(--gold)'}"/>`
                  :`<rect x="${X}" y="${zero}" width="${bw-2}" height="${Math.min(h,H-P.b-zero)}" rx="2" style="fill:var(--red)"/>`}).join('');
-  return `<svg viewBox="0 0 ${W} ${H}" class="chart"><line x1="${P.l}" x2="${W-P.r}" y1="${zero-sc(s.dailyTarget)}" y2="${zero-sc(s.dailyTarget)}" style="stroke:var(--blue)" stroke-dasharray="3 3"/><line x1="${P.l}" x2="${W-P.r}" y1="${zero}" y2="${zero}" style="stroke:var(--line)"/>${bars}<text class="t" x="${W-P.r}" y="${H-3}" text-anchor="end">son 30 gün · kesikli çizgi: ${fmt(s.dailyTarget)}</text></svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}" class="chart"><line x1="${P.l}" x2="${W-P.r}" y1="${zero-sc(tg)}" y2="${zero-sc(tg)}" style="stroke:var(--blue)" stroke-dasharray="3 3"/><line x1="${P.l}" x2="${W-P.r}" y1="${zero}" y2="${zero}" style="stroke:var(--line)"/>${bars}<text class="t" x="${W-P.r}" y="${H-3}" text-anchor="end">son 30 gün · kesikli çizgi: bugünün hedefi ${fmt(tg)}</text></svg>`;
 }
 
 /* ---------- metinler ---------- */
@@ -604,8 +663,29 @@ const FACTS=[
  'Zone 2: Konuşabildiğin tempo. Kalbi ve mitokondrileri en verimli bu bölge geliştirir.',
  '42,195 km’lik maraton mesafesi 1908 Londra Olimpiyatları’nda belirlendi.',
  'Kármán hattı (100 km) uzayın başladığı kabul edilen sınırdır.',
- 'Tendonlar kaslardan daha yavaş uyum sağlar. Kondisyon haftalarla, aşil ve kaval kemiği aylarla gelişir.'
+ 'Tendonlar kaslardan daha yavaş uyum sağlar. Kondisyon haftalarla, aşil ve kaval kemiği aylarla gelişir.',
+ 'Uygulamadaki 7.700 kcal/kg nereden geliyor? Saf yağ gram başına ~9 kcal taşır; yağ dokusunun ise ~%85’i yağdır, gerisi su ve hücre. 1 kg doku ≈ 7.700 kcal.',
+ 'Kalori ölçüsünü besinlere 19. yüzyıl sonunda Wilbur Atwater uyguladı. Bugün hâlâ kullanılan 4–4–9 kuralı (protein–karbonhidrat–yağ, kcal/g) onundur.',
+ '“Kas yağdan çok yakar” doğru ama abartılır: dinlenirken 1 kg kas günde ~13 kcal, 1 kg yağ ~4,5 kcal yakar. Kasın asıl faydası harekette ve şekil korumada.',
+ 'Uyku da diyetin parçası: Nedeltcheva ve arkadaşlarının 2010’da <i>Annals of Internal Medicine</i>’de yayımlanan deneyinde, aynı kalori açığında 5,5 saat uyuyanlar 8,5 saat uyuyanlara göre yağdan %55 daha az kaybetti.',
+ 'Protein için tavan: Morton ve arkadaşlarının 2018 meta-analizine (<i>BJSM</i>) göre kas kazanımına katkı günde ~1,6 g/kg civarında platoya ulaşıyor.',
+ 'NEAT, yani egzersiz dışı hareket (ayakta durmak, yürüyerek telefonla konuşmak, kıpırdanmak), James Levine’in çalışmalarına göre benzer yapıdaki iki insan arasında günde yüzlerce, uç durumlarda ~2.000 kcal fark yaratabiliyor.',
+ 'Pontzer’in Tanzanya’daki Hadza avcı-toplayıcıları üzerine 2012 çalışması şaşırtıcıydı: gün boyu yürüyen Hadza’nın toplam enerji harcaması, vücut ölçüsüne göre düzeltilince masa başı çalışan Batılılardan pek farklı değildi. Vücut bütçesini dengeler; bu yüzden yemek tarafı da önemli.',
+ 'Günde 10.000 adım hedefi bilimsel bir bulgudan değil, 1965’te Japonya’da satılan “manpo-kei” (“10.000 adım sayacı”) adlı adımsayardan doğdu. Lee ve arkadaşlarının 2019 çalışmasında yaşlı kadınlarda faydanın ~7.500 adımda düzleştiği görüldü.',
+ 'Ter seni nasıl soğutur? 1 litre terin buharlaşması vücuttan ~580 kcal ısı taşır. Kas makinesinin %75 atık ısısını dışarı atan radyatör budur.',
+ 'İnsan, hayvanlar âleminin en iyi uzun mesafe koşucularından biridir. Bramble ve Lieberman’ın 2004’te <i>Nature</i>’da yayımlanan makalesine göre terleme, kısa tüy ve yaylı aşil tendonu bizi “dayanıklılık avcısı” yaptı.',
+ 'Beyin vücut ağırlığının yalnızca ~%2’si ama dinlenme enerjisinin ~%20’sini tüketir: ~20 W, loş bir ampul kadar.',
+ 'Kalbin günde ~100.000 kez atar. Bir yılda ~36 milyon atış: bu programın sonuna kadar kalbin de bir maraton koşacak.',
+ 'Fothergill ve arkadaşlarının 2016’da <i>Obesity</i>’de yayımlanan takibinde, hızlı ve büyük kilo veren yarışmacıların metabolizması 6 yıl sonra bile beklenenden günde ~500 kcal düşük çıktı. Yavaş ve uzun vadeli planın gerekçelerinden biri bu.',
+ 'Sindirimin bedeli besine göre değişir: proteinin ~%20–30’u, karbonhidratın ~%5–10’u, yağın ~%0–3’ü sindirim sırasında harcanır.',
+ 'Kahverengi yağ dokusu enerjiyi depolamak yerine ısı üretmek için yakar. Yetişkinlerde de bulunduğu 2009’da <i>NEJM</i>’de yayımlanan çalışmalarla kesinleşti; soğukta etkinleşir.',
+ 'Yürürken her adımda ayağına vücut ağırlığının ~1,2 katı, koşarken ~2–3 katı kuvvet biner. 100 kg ile koşuda her adım 200–300 kg demek; eklemlere sabır bu yüzden.',
+ 'Everest’in zirvesinde hava basıncı deniz seviyesinin ancak ~üçte biri kadardır. Bu yüzden dağcılar zirveye çıkmadan önce yüksekliğe haftalarca alışır.',
+ 'Türkiye dünya fındık üretiminin yarısından fazlasını karşılar; il bazında birinci Ordu’dur. Bir avuç (~30 g) iç fındık ~190 kcal’dir: lezzetli, besleyici ve kalori bakımından yoğun.',
+ 'Parasang, Anabasis’teki mesafe birimidir: yaklaşık 5–6 km, yani bir saatlik yürüyüş. Ksenophon yolculuğu bu birimle ölçerek yazdı.',
+ '1 MET, dinlenik oturmanın enerji maliyetidir ve kabaca kilogram başına saatte 1 kcal’e denk gelir. Tempolu yürüyüş ~4, hafif koşu ~8 MET’tir.'
 ];
+let factShift=0;
 
 /* ---------- ana sayfa ---------- */
 function eqHTML(p){ const s=state.settings;
@@ -635,18 +715,18 @@ function renderHome(st){
   $('#hero').innerHTML=`<div class="hero">${ring(st.total/s.goal)}
     <div><div class="muted small">Kumbarada</div><div class="big">${fmt(st.total)}</div><div class="muted">/ ${fmt(s.goal)} kcal</div><span class="pct">%${fmt1(100*st.total/s.goal)}</span></div>
     <div class="hero-side">
-      <div><div class="row"><span class="lbl">🎯 Bugünün hedefi${T.closed?' · ✅':''}</span><span class="lbl">${fmt(s.dailyTarget)} kcal</span></div>
-        <div class="val ${T.deficit<0?'red':T.deficit>=s.dailyTarget?'green':''}">${sgn(T.deficit)} <small>/ ${fmt(s.dailyTarget)}</small></div>
-        <div class="bar"><i class="${T.deficit<0?'neg':''}" style="width:${T.deficit<0?100:Math.min(100,100*T.deficit/s.dailyTarget)}%"></i></div>
-        <div class="lbl">${T.closed?(T.deficit>=s.dailyTarget?'Hedef tuttu 👏':'Gün kapandı'):T.deficit>=s.dailyTarget?(T.hasFood?'Şimdilik hedefin üstündesin':'Yemek yazılınca düşecek'):`Hedefe ${fmt(s.dailyTarget-T.deficit)} kcal var`}</div></div>
-      <div><div class="lbl">📅 Kalan ortalama</div>
-        <div class="val">${fmt(st.required)} <small>kcal/gün</small></div>
-        <div class="lbl">${fmt(st.remaining)} kcal ÷ ${fmt(st.daysLeft)} gün${st.required<=s.dailyTarget?' · planın altında 🟢':' · planın üstünde 🔴'}</div></div>
+      <div><div class="row"><span class="lbl">🎯 Bugünün hedefi${T.closed?' · ✅':''}</span><span class="lbl">${TMODE[s.targetMode]||''}</span></div>
+        <div class="val ${T.deficit<0?'red':T.deficit>=T.target?'green':''}">${sgn(T.deficit)} <small>/ ${fmt(T.target)}</small></div>
+        <div class="bar"><i class="${T.deficit<0?'neg':''}" style="width:${T.deficit<0?100:T.target>0?Math.min(100,100*T.deficit/T.target):100}%"></i></div>
+        <div class="lbl">${st.remaining<=0?'Kumbara doldu 🏆 Gerisi bonus.':T.closed?(T.deficit>=T.target?'Hedef tuttu 👏':'Gün kapandı'):T.deficit>=T.target?(T.hasFood?'Şimdilik hedefin üstündesin':'Yemek yazılınca düşecek'):`Hedefe ${fmt(T.target-T.deficit)} kcal var`}</div></div>
+      <div><div class="row"><span class="lbl">🔮 Yarının hedefi</span><span class="lbl">${s.targetMode==='fixed'?'':(()=>{const d=st.tomorrowTarget-T.target; return Math.abs(d)<0.5?'aynı':d<0?`<span class="green">▼ ${fmt1(-d)}</span>`:`<span class="red">▲ ${fmt1(d)}</span>`;})()}</span></div>
+        <div class="val">${fmt(st.tomorrowTarget)} <small>kcal</small></div>
+        <div class="lbl">${s.targetMode==='fixed'?'Sabit plan':T.closed?'Bugünkü sonuçla belli oldu':'Gün bu haliyle kapanırsa'} · kalan ort. ${fmt(st.required)}${st.required<=s.dailyTarget?' 🟢':' 🔴'}</div></div>
     </div></div>
     <div class="kpis"><div><b>${fmt(st.remaining)}</b><span>kalan kcal</span></div><div><b>${st.nDays}.</b><span>gün / 365</span></div><div><b>${fmt1(st.fatG/1000)}</b><span>kg yağ eşdeğeri</span></div></div>`;
 
-  const w=Math.max(0,Math.min(100,100*T.deficit/s.dailyTarget));
-  $('#today').innerHTML=`<div class="row"><h2>Bugün ${T.closed?'· ✅ kapandı':'· anlık'}</h2><span class="muted small">hedef ${fmt(s.dailyTarget)}</span></div>
+  const w=T.target>0?Math.max(0,Math.min(100,100*T.deficit/T.target)):100;
+  $('#today').innerHTML=`<div class="row"><h2>Bugün ${T.closed?'· ✅ kapandı':'· anlık'}</h2><span class="muted small">hedef ${fmt(T.target)}</span></div>
     <div class="row"><b style="font-size:26px" class="${T.deficit<0?'red':''}">${sgn(T.deficit)} kcal</b></div>
     <div class="bar"><i class="${T.deficit<0?'neg':''}" style="width:${T.deficit<0?100:w}%"></i></div>
     ${!T.closed&&!T.hasFood?'<p class="muted small">Henüz yemek yazılmadı. Anlık açık bu yüzden büyük görünüyor; yazdıkça gerçeğe yaklaşır.</p>':''}
@@ -668,16 +748,25 @@ function renderHome(st){
      <div><div class="lbl">${fmt(s.dailyTarget)}/gün planına göre</div><div class="val ${st.planDiff>=0?'green':'red'}">${sgn(st.planDiff)}</div><div class="lbl">kcal</div></div></div>`; }
   $('#forecast').innerHTML=`<h2>Rota tahmini</h2>${fc}<p class="muted small" style="margin-top:10px">Her kapanan günle yeniden hesaplanır. Kapatılmayan gün kumbaraya 0 yazar, yani deftersiz gün tahmini geriye iter.</p>`;
   $('#chartCard').innerHTML=`<h2>Yıllık rota</h2>${chartSVG(st)}<h3 style="font-size:13px;color:var(--muted)">Günlük açık</h3>${barsSVG(st)}`;
-  $('#vitrin').innerHTML=`<h2>Vitrin</h2>${vitrin(st).map(([e,t])=>`<div class="vit"><span class="e">${e}</span><span>${t}</span></div>`).join('')}`;
+  $('#vitrin').innerHTML=`<div class="row"><h2>Vitrin</h2><button class="btn sm ghost" id="vitMore" type="button">🔄 Başka göster</button></div>${vitrin(st).map(([e,c,t])=>`<div class="vit"><span class="e">${e}</span><span><span class="vtag">${c}</span>${t}</span></div>`).join('')}`;
   const bl=badges(st), next=bl.filter(b=>!b.done).sort((a,b)=>b.val/b.target-a.val/a.target).slice(0,3);
   $('#nextBadges').innerHTML=`<div class="row"><h2>Rozetler</h2><span class="muted small">${bl.filter(b=>b.done).length} / ${bl.length}</span></div><div class="badges">${next.map(badgeHTML).join('')}</div><p class="muted small" style="margin-top:8px">En yakın üç rozet.</p>`;
-  $('#fact').innerHTML=`<h2>Biliyor muydun?</h2><div class="fact">${FACTS[dayDiff('2026-01-01',st.today)%FACTS.length]}</div>`;
+  const fi=((dayDiff('2026-01-01',st.today)*7+factShift)%FACTS.length+FACTS.length)%FACTS.length;
+  $('#fact').innerHTML=`<div class="row"><h2>Biliyor muydun?</h2><button class="btn sm ghost" id="factMore" type="button">💡 Bir tane daha</button></div><div class="fact">${FACTS[fi]}</div><div class="muted small" style="margin-top:8px">${fi+1} / ${FACTS.length}</div>`;
 }
-function badgeHTML(b){const p=Math.min(100,100*b.val/b.target);
-  return `<div class="badge ${b.done?'on':'off'}"><span class="e">${b.e}</span><div class="n">${esc(b.n)}</div><div class="d">${esc(b.d)}</div>${b.done?'':`<div class="mini"><i style="width:${p}%"></i></div>`}</div>`;}
+const TIERN={1:'Bronz',2:'Gümüş',3:'Altın',4:'Altın madalyon'};
+const LAUREL=(()=>{ const leaf=(cx,cy,a)=>`<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="6.2" ry="2.5" transform="rotate(${a.toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)})"/>`; let L='';
+  for(let k=0;k<8;k++){ const t=(118+k*15)*Math.PI/180, r=45, x=50+r*Math.cos(t), y=50+r*Math.sin(t), a=t*180/Math.PI+90;
+    L+=leaf(x,y,a-18)+leaf(100-x,y,180-a+18); }
+  return `<svg class="laurel" viewBox="0 0 100 100"><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe28f"/><stop offset="1" stop-color="#a8701a"/></linearGradient></defs><g fill="url(#lg)" stroke="rgba(90,55,0,.35)" stroke-width=".4">${L}</g></svg>`; })();
+function badgeHTML(b){const p=Math.min(100,100*b.val/b.target), t=b.tier||1;
+  return `<div class="badge t${t} ${b.done?'on':'off'}" title="${esc(TIERN[t])}"><div class="medal" style="--p:${p.toFixed(1)}%"><span class="core"><span class="e">${b.e}</span></span>${t===4?LAUREL:''}</div><div class="n">${esc(b.n)}</div><div class="tier">${TIERN[t]}</div><div class="d">${esc(b.d)}</div>${b.done?'':`<div class="pct">%${fmt(p)}</div>`}</div>`;}
 function renderBadges(st){
   const bl=badges(st),cats=[...new Set(bl.map(b=>b.cat))],dn=bl.filter(b=>b.done).length;
-  $('#badgeWrap').innerHTML=`<div class="card"><div class="row"><h2>Rozet koleksiyonu</h2><b class="gold">${dn} / ${bl.length}</b></div><div class="bar"><i style="width:${100*dn/bl.length}%"></i></div></div>`+
+  const tc=t=>`${bl.filter(b=>b.done&&b.tier===t).length}/${bl.filter(b=>b.tier===t).length}`;
+  $('#badgeWrap').innerHTML=`<div class="card"><div class="row"><h2>Rozet koleksiyonu</h2><b class="gold">${dn} / ${bl.length}</b></div><div class="bar"><i style="width:${100*dn/bl.length}%"></i></div>
+    <div class="tiercount"><span><i style="background:radial-gradient(circle at 35% 30%,#f8d0a8,#c47c45 58%,#86491f)"></i>Bronz ${tc(1)}</span><span><i style="background:radial-gradient(circle at 35% 30%,#fff,#c8d0d9 58%,#86909c)"></i>Gümüş ${tc(2)}</span><span><i style="background:radial-gradient(circle at 35% 30%,#fff8d6,#f2c14e 55%,#a8701a)"></i>Altın ${tc(3)}</span><span><i style="background:radial-gradient(circle at 35% 30%,#fff8d6,#f2c14e 55%,#a8701a);box-shadow:0 0 6px #f4b942"></i>Madalyon ${tc(4)}</span></div>
+    <p class="muted small" style="margin-top:8px">Her seride rozetler kolaydan zora bronz, gümüş, altın ve en sonda altın madalyon olarak ilerler.</p></div>`+
    cats.map(c=>{const g=bl.filter(b=>b.cat===c);return `<div class="catbar"><h3>${c}</h3><span class="muted small">${g.filter(b=>b.done).length}/${g.length}</span></div><div class="badges">${g.map(badgeHTML).join('')}</div>`}).join('')+
    `<p class="muted small" style="margin:18px 4px">Mesafeler yaklaşık karayolu/coğrafi değerlerdir. Yükseklik rozetleri, biriken enerjinin ~%25 kas verimiyle vücudunu ne kadar yükseğe taşıyabileceğini gösterir.</p>`;
 }
@@ -714,7 +803,7 @@ function renderCetvel(){
 }
 function renderSettings(){
   const f=$('#f-settings'),s=state.settings;
-  if(document.activeElement?.form!==f) for(const k of ['startDate','goal','dailyTarget','baseline','startWeight','height','age','factor','foodCaution','caution','stride','ewmaDays']) f.elements[k].value=s[k];
+  if(document.activeElement?.form!==f){ f.elements.targetMode.value=s.targetMode||'remain'; } if(document.activeElement?.form!==f) for(const k of ['startDate','goal','dailyTarget','baseline','startWeight','height','age','factor','foodCaution','caution','stride','ewmaDays']) f.elements[k].value=s[k];
   $('#scUrl').textContent=`${location.origin}${location.pathname}?d=[Tarih]&aktif=[Aktif Enerji]&adim=[Adım]&m=[Mesafe (metre, ondalıksız)]`;
   $('#modeInfo').innerHTML=backend?.name==='firebase'?`☁️ Bulut modu: ${esc(state.user?.email||'')} hesabıyla tüm cihazlarda senkron.`:`📱 Yerel mod: veriler yalnızca bu tarayıcıda. Firebase ayarlanınca cihazlar arası senkron başlar.`;
   $('#logoutBtn').style.display=backend?.name==='firebase'?'block':'none';
@@ -732,27 +821,28 @@ let statRange='30', statShowAll=false;
 const WD=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
 const wdIdx=d=>{const [y,m,dd]=parts(d);return (new Date(y,m,dd).getDay()+6)%7;};
 const mondayOf=d=>addDays(d,-wdIdx(d));
-function statBars(days,target){
-  const W=340,H=130,P={l:6,r:6,t:8,b:18},n=Math.max(days.length,7),M=Math.max(target*1.25,...days.map(p=>Math.abs(p.closed?p.deficit:0)));
+function statBars(days){
+  const W=340,H=130,P={l:6,r:6,t:8,b:18},n=Math.max(days.length,7),M=Math.max(...days.map(p=>p.target*1.25),...days.map(p=>Math.abs(p.closed?p.deficit:0)));
   const bw=(W-P.l-P.r)/n, zero=H-P.b-(H-P.t-P.b)*0.2, sc=v=>(zero-P.t)*v/M;
   const bars=days.map((p,i)=>{const X=P.l+(n-days.length+i)*bw+(bw>4?1:0), w=Math.max(1,bw-(bw>4?2:0));
     if(!p.closed) return p.hasFood?`<rect x="${X}" y="${zero-3}" width="${w}" height="3" style="fill:var(--muted)"/>`:'';
     const h=sc(Math.abs(p.deficit));
-    return p.deficit>=0?`<rect x="${X}" y="${zero-h}" width="${w}" height="${h}" rx="2" style="fill:${p.deficit>=target?'var(--green)':'var(--gold)'}"><title>${p.d}: ${sgn(p.deficit)}</title></rect>`
+    return p.deficit>=0?`<rect x="${X}" y="${zero-h}" width="${w}" height="${h}" rx="2" style="fill:${p.deficit>=p.target?'var(--green)':'var(--gold)'}"><title>${p.d}: ${sgn(p.deficit)}</title></rect>`
       :`<rect x="${X}" y="${zero}" width="${w}" height="${Math.min(h,H-P.b-zero)}" rx="2" style="fill:var(--red)"><title>${p.d}: ${sgn(p.deficit)}</title></rect>`;}).join('');
   const f=days[0],l=days[days.length-1];
-  return `<svg viewBox="0 0 ${W} ${H}" class="chart"><line x1="${P.l}" x2="${W-P.r}" y1="${zero-sc(target)}" y2="${zero-sc(target)}" style="stroke:var(--blue)" stroke-dasharray="3 3"/><line x1="${P.l}" x2="${W-P.r}" y1="${zero}" y2="${zero}" style="stroke:var(--line)"/>${bars}
+  const tl=days.map((p,i)=>`${(P.l+(n-days.length+i+0.5)*bw).toFixed(1)},${(zero-sc(p.target)).toFixed(1)}`).join(' ');
+  return `<svg viewBox="0 0 ${W} ${H}" class="chart"><polyline points="${tl}" fill="none" style="stroke:var(--blue)" stroke-dasharray="3 3"/><line x1="${P.l}" x2="${W-P.r}" y1="${zero}" y2="${zero}" style="stroke:var(--line)"/>${bars}
     ${f?`<text class="t" x="${P.l+(n-days.length)*bw}" y="${H-4}">${trDate(f.d,{day:'numeric',month:'short'})}</text><text class="t" x="${W-P.r}" y="${H-4}" text-anchor="end">${trDate(l.d,{day:'numeric',month:'short'})}</text>`:''}</svg>
-    <div class="legend"><span><i style="background:var(--green)"></i>hedef tuttu</span><span><i style="background:var(--gold)"></i>artı</span><span><i style="background:var(--red)"></i>eksi</span><span><i style="background:var(--blue)"></i>${fmt(target)} hedef</span></div>`;
+    <div class="legend"><span><i style="background:var(--green)"></i>hedef tuttu</span><span><i style="background:var(--gold)"></i>artı</span><span><i style="background:var(--red)"></i>eksi</span><span><i style="background:var(--blue)"></i>günün hedefi</span></div>`;
 }
 function groupRows(days,keyFn,labelFn,target){
   const g=new Map(); for(const p of days){ const k=keyFn(p.d); if(!g.has(k)) g.set(k,[]); g.get(k).push(p); }
   return [...g.entries()].reverse().map(([k,ps])=>{ const c=ps.filter(p=>p.closed), sum=c.reduce((a,p)=>a+p.deficit,0);
-    return `<tr><td>${labelFn(k,ps)}</td><td>${c.length}/${ps.length}</td><td class="${sum<0?'red':'gold'}">${sgn(sum)}</td><td>${c.length?fmt(sum/c.length):'—'}</td><td>${c.filter(p=>p.deficit>=target).length}</td></tr>`; }).join('');
+    return `<tr><td>${labelFn(k,ps)}</td><td>${c.length}/${ps.length}</td><td class="${sum<0?'red':'gold'}">${sgn(sum)}</td><td>${c.length?fmt(sum/c.length):'—'}</td><td>${c.filter(p=>p.deficit>=p.target).length}</td></tr>`; }).join('');
 }
 function renderStats(st){
-  const s=st.s, all=st.series, days=statRange==='all'?all:all.slice(-(+statRange)), C=days.filter(p=>p.closed), tgt=s.dailyTarget;
-  const sum=C.reduce((a,p)=>a+p.deficit,0), hit=C.filter(p=>p.deficit>=tgt).length, neg=C.filter(p=>p.deficit<0).length;
+  const s=st.s, all=st.series, days=statRange==='all'?all:all.slice(-(+statRange)), C=days.filter(p=>p.closed);
+  const sum=C.reduce((a,p)=>a+p.deficit,0), hit=C.filter(p=>p.deficit>=p.target).length, neg=C.filter(p=>p.deficit<0).length;
   const best=C.reduce((b,p)=>!b||p.deficit>b.deficit?p:b,null), worst=C.reduce((b,p)=>!b||p.deficit<b.deficit?p:b,null);
   const avgOf=f=>C.length?C.reduce((a,p)=>a+f(p),0)/C.length:null;
   const kmT=days.reduce((a,p)=>a+p.footKm,0), stepsT=days.reduce((a,p)=>a+p.steps,0);
@@ -770,21 +860,21 @@ function renderStats(st){
     ${K('Yürüyüş / koşu',fmt1(kmT)+' km',fmt(stepsT)+' adım')}
     ${K('Yağ eşdeğeri',fmt1(Math.max(0,sum)/7700)+' kg','bu dönemde')}
   </div></div>`;
-  h+=`<div class="card"><h2>Günlük net açık</h2>${days.length?statBars(days,tgt):'<p class="muted">Veri yok.</p>'}</div>`;
+  h+=`<div class="card"><h2>Günlük net açık</h2>${days.length?statBars(days):'<p class="muted">Veri yok.</p>'}</div>`;
 
   const rows=[...days].reverse(), lim=statShowAll?rows.length:Math.min(rows.length,31);
   h+=`<div class="card"><div class="row"><h2>Gün gün</h2><button class="btn sm ghost" id="csvBtn">⬇️ CSV</button></div><div class="tblwrap"><table class="stbl">
-    <tr><th>Gün</th><th>Harcanan</th><th>Alınan</th><th>Net</th><th>Kumbara</th></tr>
+    <tr><th>Gün</th><th>Hedef</th><th>Harcanan</th><th>Alınan</th><th>Net</th><th>Kumbara</th></tr>
     ${rows.slice(0,lim).map(p=>{const empty=!p.closed&&!p.hasFood&&!state.entries.some(e=>e.date===p.d&&e.type!=='close');
-      return `<tr class="${p.closed?'':empty?'empty':'open'}"><td>${p.closed?(p.deficit>=tgt?'🎯':p.deficit<0?'🔻':'✅'):'⏳'} ${trDate(p.d,{weekday:'short',day:'numeric',month:'short'})}</td>
-      <td>${fmt(p.burn)}</td><td>${p.hasFood?fmt(p.intakeAdj):'—'}</td><td class="${p.deficit<0?'red':p.closed&&p.deficit>=tgt?'green':''}">${sgn(p.deficit)}</td><td>${fmt(p.cum)}</td></tr>`;}).join('')}
+      return `<tr class="${p.closed?'':empty?'empty':'open'}"><td>${p.closed?(p.deficit>=p.target?'🎯':p.deficit<0?'🔻':'✅'):'⏳'} ${trDate(p.d,{weekday:'short',day:'numeric',month:'short'})}</td>
+      <td class="muted">${fmt(p.target)}</td><td>${fmt(p.burn)}</td><td>${p.hasFood?fmt(p.intakeAdj):'—'}</td><td class="${p.deficit<0?'red':p.closed&&p.deficit>=p.target?'green':''}">${sgn(p.deficit)}</td><td>${fmt(p.cum)}</td></tr>`;}).join('')}
   </table></div>${rows.length>lim?`<button class="btn ghost full tblmore" id="showAllDays">Tümünü göster (${rows.length} gün)</button>`:''}
   <p class="muted small" style="margin-top:8px">🎯 hedef tuttu · ✅ kapandı · 🔻 eksi gün · ⏳ açık (kumbaraya girmedi). Soluk satırların net değeri anlık tahmindir.</p></div>`;
 
   h+=`<div class="card"><h2>Haftalar</h2><div class="tblwrap"><table class="stbl"><tr><th>Hafta</th><th>Kapalı</th><th>Toplam</th><th>Ort./gün</th><th>🎯</th></tr>
-    ${groupRows(days,mondayOf,k=>trDate(k,{day:'numeric',month:'short'})+' →',tgt)}</table></div></div>`;
+    ${groupRows(days,mondayOf,k=>trDate(k,{day:'numeric',month:'short'})+' →')}</table></div></div>`;
   if(statRange==='all') h+=`<div class="card"><h2>Aylar</h2><div class="tblwrap"><table class="stbl"><tr><th>Ay</th><th>Kapalı</th><th>Toplam</th><th>Ort./gün</th><th>🎯</th></tr>
-    ${groupRows(days,d=>d.slice(0,7),k=>trDate(k+'-01',{month:'long',year:'numeric'}),tgt)}</table></div></div>`;
+    ${groupRows(days,d=>d.slice(0,7),k=>trDate(k+'-01',{month:'long',year:'numeric'}))}</table></div></div>`;
 
   // haftanın günleri
   const wd=WD.map(()=>({n:0,s:0})); for(const p of C){ const i=wdIdx(p.d); wd[i].n++; wd[i].s+=p.deficit; }
@@ -817,6 +907,7 @@ function statsCSV(){ const st=lastSt; if(!st) return;
   const L=[['tarih','durum','harcanan','alinan_payli','net','kumbara_toplam','adim','yuruyus_km'].join(';')];
   for(const p of st.series) L.push([p.d,p.closed?'kapali':'acik',Math.round(p.burn),Math.round(p.intakeAdj),Math.round(p.deficit),Math.round(p.cum),p.steps,(Math.round(p.footKm*100)/100).toString().replace('.',',')].join(';'));
   const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['﻿'+L.join('\n')],{type:'text/csv'})); a.download=`kalori-kumbarasi-${st.today}.csv`; a.click(); URL.revokeObjectURL(a.href); }
+document.addEventListener('click',e=>{ if(e.target.closest('#vitMore')){ vitShift++; if(lastSt) renderHome(lastSt); } if(e.target.closest('#factMore')){ factShift++; if(lastSt) renderHome(lastSt); } });
 $('#statSeg').addEventListener('click',e=>{const b=e.target.closest('[data-r]'); if(!b) return; statRange=b.dataset.r; statShowAll=false; $$('#statSeg button').forEach(x=>x.classList.toggle('active',x===b)); if(lastSt) renderStats(lastSt);});
 $('#statsWrap').addEventListener('click',e=>{ if(e.target.closest('#csvBtn')) return statsCSV(); if(e.target.closest('#showAllDays')){ statShowAll=true; renderStats(lastSt);} });
 
@@ -998,7 +1089,7 @@ $('#f-extra').addEventListener('submit',e=>{ e.preventDefault(); const f=e.targe
   toast('📒 Ekstra deftere yazıldı. Dürüstlük de bir disiplindir.'); const d=f.elements.date.value; f.reset(); f.elements.date.value=d; go('home'); });
 $('#f-health').addEventListener('submit',e=>{ e.preventDefault(); const f=e.target,a=num(f.elements.active.value); if(!isFinite(a)) return toast('Aktif enerjiyi gir.');
   backend.put(healthEntry(f.elements.date.value,a,intOf(f.elements.steps.value),num(f.elements.km.value))); toast('⌚ Saat verisi kaydedildi'); const d=f.elements.date.value; f.reset(); f.elements.date.value=d; go('home'); });
-$('#f-settings').addEventListener('submit',e=>{ e.preventDefault(); const f=e.target,s={...state.settings}; s.startDate=f.elements.startDate.value||DEFAULTS.startDate;
+$('#f-settings').addEventListener('submit',e=>{ e.preventDefault(); const f=e.target,s={...state.settings}; s.startDate=f.elements.startDate.value||DEFAULTS.startDate; s.targetMode=f.elements.targetMode.value;
   for(const k of ['goal','dailyTarget','baseline','startWeight','height','age','factor','foodCaution','caution','stride','ewmaDays']){ const v=num(f.elements[k].value); if(isFinite(v)) s[k]=v; }
   backend.saveSettings(s); toast('⚙️ Ayarlar kaydedildi'); });
 $('#f-cetvel').addEventListener('submit',e=>{ e.preventDefault(); const f=e.target, g=k=>num(f.elements[k].value);
