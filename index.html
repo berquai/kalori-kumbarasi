@@ -352,6 +352,11 @@ code{background:var(--card2);padding:2px 6px;border-radius:6px;font-size:12px;wo
       <button class="btn ghost full" id="copyUrl">Adresi kopyala</button>
     </div>
     <div class="card">
+      <h2>📬 Arka plan gönderimi (önerilen)</h2>
+      <p class="small">Kestirme tarayıcı açmadan veriyi bu posta kutusuna bırakır. Telefon kilitliyken de çalışır; uygulamayı açtığında kayıt işlenir.</p>
+      <div id="inboxBox"></div>
+    </div>
+    <div class="card">
       <h2>Veri</h2>
       <div class="g2"><button class="btn" id="expBtn">⬇️ Yedek indir</button><button class="btn" id="impBtn">⬆️ Yedek yükle</button></div>
       <input type="file" id="impFile" accept="application/json" style="display:none">
@@ -837,6 +842,11 @@ function renderSettings(){
   const f=$('#f-settings'),s=state.settings;
   if(document.activeElement?.form!==f){ f.elements.targetMode.value=s.targetMode||'remain'; } if(document.activeElement?.form!==f) for(const k of ['startDate','goal','dailyTarget','baseline','startWeight','height','age','factor','foodCaution','caution','stride','ewmaDays']) f.elements[k].value=s[k];
   $('#scUrl').textContent=`${location.origin}${location.pathname}?d=[Tarih]&aktif=[Aktif Enerji]&adim=[Adım]&m=[Mesafe (metre, ondalıksız)]`;
+  const ik=state.settings.inboxKey, pid=(window.FIREBASE_CONFIG||{}).projectId||'kalori-kumbarasi';
+  $('#inboxBox').innerHTML=ik?`<p class="small">Bu adres sana özel. Kimseyle paylaşma.</p><p><code id="inboxUrl">https://firestore.googleapis.com/v1/projects/${pid}/databases/(default)/documents/inbox/${ik}/days/</code></p>
+    <button class="btn ghost full" id="copyInbox" type="button">Posta kutusu adresini kopyala</button>
+    <p class="muted small" style="margin-top:8px">${state.inboxErr?`⚠️ Posta kutusu açılamadı (${esc(state.inboxErr)}). Firebase kurallarının güncel olduğundan emin ol.`:state.inboxOk?'✅ Posta kutusu açık ve dinleniyor.':'⏳ Bağlanıyor…'}</p>`
+    :'<p class="muted small">Posta kutusu Google ile giriş yapınca oluşur.</p>';
   $('#modeInfo').innerHTML=backend?.name==='firebase'?`☁️ Bulut modu: ${esc(state.user?.email||'')} hesabıyla tüm cihazlarda senkron.`:`📱 Yerel mod: veriler yalnızca bu tarayıcıda. Firebase ayarlanınca cihazlar arası senkron başlar.`;
   $('#logoutBtn').style.display=backend?.name==='firebase'?'block':'none';
 }
@@ -986,7 +996,21 @@ async function FirebaseBackend(cfg){
   A.onAuthStateChanged(auth,user=>{ unsubs.forEach(u=>u()); unsubs=[];
     if(!user){ me=null; state.user=null; state.ready=false; $('#login').classList.add('show'); return; }
     me=user.uid; state.user={email:user.email}; $('#login').classList.remove('show');
-    let gE=false,gS=false; const chk=()=>{ if(gE&&gS&&!state.ready){ state.ready=true; processIngest(); } render(); };
+    let gE=false,gS=false; const chk=()=>{ if(gE&&gS&&!state.ready){ state.ready=true; processIngest(); startInbox(); } render(); };
+    /* Arka plan posta kutusu: kestirme tarayıcı açmadan inbox/{anahtar}/days/{zaman} belgesine yazar; uygulama açılınca işleyip siler */
+    const startInbox=async()=>{ try{
+      let key=state.settings.inboxKey;
+      if(!key){ const a=new Uint8Array(18); crypto.getRandomValues(a); key=[...a].map(b=>'abcdefghijklmnopqrstuvwxyz0123456789'[b%36]).join(''); await F.setDoc(F.doc(db,'users',me,'meta','settings'),clean(migrate({...state.settings,inboxKey:key}))); }
+      await F.setDoc(F.doc(db,'inbox',key),{uid:me});
+      unsubs.push(F.onSnapshot(F.collection(db,'inbox',key,'days'),snap=>{
+        const docs=snap.docs.map(d=>({id:d.id,q:String(d.data().q||'')})).sort((a,b)=>a.id<b.id?-1:1);
+        for(const d of docs){ const qs=d.q.includes('?')?d.q.slice(d.q.indexOf('?')+1):d.q, r=parseIngest(new URLSearchParams(qs));
+          if(isFinite(r.active)){ const cur=state.entries.find(e=>e.id==='health-'+r.date); if(!cur||!cur.createdAt||!r.at||r.at>=cur.createdAt) be.put(healthEntry(r.date,r.active,r.steps,r.km,'kestirme',r.at)); }
+          F.deleteDoc(F.doc(db,'inbox',key,'days',d.id)).catch(()=>{}); }
+        if(docs.length) toast(`📬 Arka planda gelen ${docs.length} saat kaydı işlendi`,4000);
+      },e=>{ state.inboxErr=e.code; render(); }));
+      state.inboxOk=true; render();
+    }catch(e){ state.inboxErr=e.code||e.message; render(); } };
     unsubs.push(F.onSnapshot(F.collection(db,'users',me,'entries'),snap=>{ state.entries=snap.docs.map(d=>d.data()); gE=true; chk(); },e=>toast('⚠️ Senkron hatası: '+e.code)));
     unsubs.push(F.onSnapshot(F.doc(db,'users',me,'meta','settings'),snap=>{ state.settings=migrate(snap.exists()?snap.data():{}); gS=true; chk(); })); });
   return be;
@@ -994,11 +1018,14 @@ async function FirebaseBackend(cfg){
 
 /* ---------- Kestirme ---------- */
 let pendingIngest=null;
-(()=>{ const p=new URLSearchParams(location.search); if(p.has('aktif')||p.has('adim')){ pendingIngest={date:normDate(p.get('d')),active:numSum(p.get('aktif')),steps:Math.round(numSum(p.get('adim')))||0,km:p.has('m')?numSum(p.get('m'))/1000:numSum(p.get('km'))}; history.replaceState(null,'',location.pathname); } })();
-const healthEntry=(date,active,steps,km,src='elle')=>({id:'health-'+date,date,type:'health',active:Math.round(active||0),steps:steps||0,km:isFinite(km)?Math.round(km*100)/100:0,src,createdAt:Date.now()});
+function parseIngest(p){ const d=String(p.get('d')||''), tm=d.match(/[_T ](\d{1,2})[-:.](\d{2})/);
+  let at=null; if(tm){ const [y,mo,da]=normDate(d).split('-').map(Number); at=new Date(y,mo-1,da,+tm[1],+tm[2]).getTime(); }
+  return {date:normDate(d),active:numSum(p.get('aktif')),steps:Math.round(numSum(p.get('adim')))||0,km:p.has('m')?numSum(p.get('m'))/1000:numSum(p.get('km')),at}; }
+(()=>{ const p=new URLSearchParams(location.search); if(p.has('aktif')||p.has('adim')){ pendingIngest=parseIngest(p); history.replaceState(null,'',location.pathname); } })();
+const healthEntry=(date,active,steps,km,src='elle',at=null)=>({id:'health-'+date,date,type:'health',active:Math.round(active||0),steps:steps||0,km:isFinite(km)?Math.round(km*100)/100:0,src,createdAt:at||Date.now()});
 function processIngest(){ if(!pendingIngest) return; const p=pendingIngest; pendingIngest=null;
   if(!isFinite(p.active)) return toast('⚠️ Kestirmeden aktif enerji okunamadı.');
-  backend.put(healthEntry(p.date,p.active,p.steps,p.km,'kestirme')); toast(`⌚ ${trDate(p.date,{day:'numeric',month:'long'})}: ${fmt(p.active)} aktif kcal alındı (tabana göre ${sgn(p.active-state.settings.baseline)})`,5000); }
+  backend.put(healthEntry(p.date,p.active,p.steps,p.km,'kestirme',p.at)); toast(`⌚ ${trDate(p.date,{day:'numeric',month:'long'})}: ${fmt(p.active)} aktif kcal alındı (tabana göre ${sgn(p.active-state.settings.baseline)})`,5000); }
 
 /* ---------- formlar ---------- */
 function setForm(f){ $$('#formSeg button').forEach(b=>b.classList.toggle('active',b.dataset.f===f)); $$('.frm').forEach(x=>x.style.display=x.id==='f-'+f?'block':'none'); updatePreviews(); }
@@ -1162,6 +1189,7 @@ document.addEventListener('click',e=>{
     $('#cfTitle').textContent=fd.builtin?'Hazır değeri doğrula / düzelt':`“${fd.n}” düzenleniyor`; setTimeout(()=>f.scrollIntoView({behavior:'smooth',block:'start'}),50); return; }
   if(t.dataset.delfood){ if(!confirm(`“${t.dataset.delfood}” cetvelden silinsin mi? (Defterdeki eski kayıtlar etkilenmez.)`)) return; const s={...state.settings}; s.foods=(s.foods||[]).filter(x=>lc(x.n)!==lc(t.dataset.delfood)); backend.saveSettings(s); }
 });
+document.addEventListener('click',async e=>{ if(!e.target.closest('#copyInbox')) return; try{ await navigator.clipboard.writeText($('#inboxUrl').textContent); toast('📋 Kopyalandı'); }catch(_){ toast('Kopyalanamadı, elle seç.'); } });
 $('#copyUrl').addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText($('#scUrl').textContent); toast('📋 Kopyalandı'); }catch(e){ toast('Kopyalanamadı, elle seç.'); } });
 $('#expBtn').addEventListener('click',()=>{ const blob=new Blob([JSON.stringify({app:'kalori-kumbarasi',v:2,exported:new Date().toISOString(),settings:state.settings,entries:state.entries},null,1)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`kalori-kumbarasi-yedek-${todayStr()}.json`; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),2000); });

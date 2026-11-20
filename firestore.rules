@@ -5,5 +5,24 @@ service cloud.firestore {
     match /users/{uid}/{document=**} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
+
+    // Arka plan posta kutusu: iPhone kestirmesi giriş yapmadan yalnızca bırakabilir (okuyamaz).
+    // Kutunun adresi uzun, rastgele ve kişiye özel bir anahtardır; kutuyu yalnızca sahibi okuyup boşaltır.
+    match /inbox/{key} {
+      allow get, update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow create: if request.auth != null && key.size() >= 20
+                    && request.resource.data.keys().hasOnly(['uid'])
+                    && request.resource.data.uid == request.auth.uid;
+
+      match /days/{day} {
+        allow create, update: if day.size() <= 40
+                              && exists(/databases/$(database)/documents/inbox/$(key))
+                              && request.resource.data.keys().hasOnly(['q'])
+                              && request.resource.data.q is string
+                              && request.resource.data.q.size() < 1000;
+        allow read, delete: if request.auth != null
+                            && get(/databases/$(database)/documents/inbox/$(key)).data.uid == request.auth.uid;
+      }
+    }
   }
 }
