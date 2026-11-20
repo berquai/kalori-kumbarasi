@@ -1017,7 +1017,8 @@ async function FirebaseBackend(cfg){
         for(const d of docs){ seen.add(d.id); const qs=d.q.includes('?')?d.q.slice(d.q.indexOf('?')+1):d.q, r=parseIngest(new URLSearchParams(qs));
           if(isFinite(r.active)){ const cur=state.entries.find(e=>e.id==='health-'+r.date); if(!cur||!cur.createdAt||!r.at||r.at>=cur.createdAt) await be.put(healthEntry(r.date,r.active,r.steps,r.km,'kestirme',r.at)); }
           F.deleteDoc(F.doc(db,'inbox',key,'days',d.id)).catch(e=>toast('⚠️ Kutu temizlenemedi: '+e.code)); }
-        if(docs.length) toast(`📬 Arka planda gelen ${docs.length} saat kaydı işlendi`,4000);
+        if(docs.length){ const last=docs[docs.length-1], qs=last.q.includes('?')?last.q.slice(last.q.indexOf('?')+1):last.q, r=parseIngest(new URLSearchParams(qs));
+          toast(`📬 Kestirmeden veri geldi: ${trDate(r.date,{day:'numeric',month:'long'})} · ${fmt(r.active)} aktif kcal · ${fmt(r.steps)} adım${docs.length>1?` (${docs.length} gönderim)`:''}`,5000); }
         return docs.length; };
       be.checkInbox=async(loud)=>{ try{ const sn=await (F.getDocsFromServer?F.getDocsFromServer(col):F.getDocs(col)); const n=await handle(sn.docs); state.inboxErr=null; state.inboxOk=true; if(loud&&!n) toast('📭 Kutu boş, yeni kayıt yok.'); render(); }
         catch(e){ state.inboxErr='okuma: '+(e.code||e.message); render(); if(loud) toast('⚠️ Kutu okunamadı: '+(e.code||e.message),5000); } };
