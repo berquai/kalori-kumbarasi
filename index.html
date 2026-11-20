@@ -32,7 +32,25 @@ main{max-width:640px;margin:0 auto;padding:4px 14px}
 h2{font-size:12.5px;margin:0 0 10px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 h3{font-size:15px;margin:16px 0 8px}
 .muted{color:var(--muted)}.small{font-size:12.5px}.gold{color:var(--gold)}.green{color:var(--green)}.red{color:var(--red)}
-.hero{display:flex;align-items:center;gap:16px}
+.hero{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hero-side{flex:1 1 220px;display:grid;gap:8px;min-width:0}
+.hero-side>div{background:var(--card2);border-radius:12px;padding:10px 12px}
+.hero-side .lbl{font-size:11.5px;color:var(--muted)}
+.hero-side .val{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+.hero-side .val small{font-size:12px;font-weight:600;color:var(--muted)}
+.hero-side .bar{height:8px;margin:6px 0 2px}
+.stbl{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+.stbl th{font-size:11px;color:var(--muted);font-weight:700;text-align:right;padding:6px 4px;border-bottom:1px solid var(--line);white-space:nowrap}
+.stbl td{text-align:right;padding:7px 4px;border-bottom:1px solid var(--line);white-space:nowrap}
+.stbl th:first-child,.stbl td:first-child{text-align:left}
+.stbl tr.open td{opacity:.6}
+.stbl tr.empty td{opacity:.4}
+.tblwrap{overflow-x:auto;margin:0 -4px}
+.tblmore{margin-top:10px}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.kgrid>div{background:var(--card2);border-radius:12px;padding:10px 12px}
+.kgrid .lbl{font-size:11.5px;color:var(--muted)}.kgrid .val{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.kgrid .sub{font-size:11px;color:var(--muted)}
 .ring{width:132px;height:132px;flex:none}
 .ring-bg{fill:none;stroke:var(--track);stroke-width:12}
 .ring-fg{fill:none;stroke:url(#gg);stroke-width:12;stroke-linecap:round;transition:stroke-dasharray .8s ease}
@@ -98,7 +116,7 @@ input:focus,select:focus{outline:2px solid rgba(244,185,66,.6);border-color:tran
 .hist .k{font-weight:800;font-variant-numeric:tabular-nums}
 .x{border:0;background:none;color:var(--muted);font-size:18px;padding:2px 6px}
 .tabbar{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:var(--hdr);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:8px 6px calc(8px + env(safe-area-inset-bottom));border-top:1px solid var(--line);z-index:10}
-.tabbar button{flex:1;background:none;border:0;color:var(--muted);font-size:11px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tabbar button{flex:1;min-width:0;background:none;border:0;color:var(--muted);font-size:11px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px}
 .tabbar .i{font-size:22px}.tabbar button.active{color:var(--gold)}
 #toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:var(--toast);color:var(--text);padding:12px 16px;border-radius:14px;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:20;max-width:92vw;box-shadow:0 8px 30px rgba(0,0,0,.35);border:1px solid var(--gold)}
 #toast.show{opacity:1;transform:translateX(-50%)}
@@ -232,6 +250,10 @@ code{background:var(--card2);padding:2px 6px;border-radius:6px;font-size:12px;wo
   </section>
 
   <!-- ROZETLER -->
+  <section class="view" id="v-stats">
+    <div class="card" style="padding:8px"><div class="seg" id="statSeg"><button data-r="7">Son 7 gün</button><button data-r="30" class="active">Son 30 gün</button><button data-r="all">Tümü</button></div></div>
+    <div id="statsWrap"></div>
+  </section>
   <section class="view" id="v-badges"><div id="badgeWrap"></div></section>
 
   <!-- DEFTER + CETVEL -->
@@ -317,6 +339,7 @@ code{background:var(--card2);padding:2px 6px;border-radius:6px;font-size:12px;wo
 <nav class="tabbar">
   <button data-go="home" class="active"><span class="i">🐷</span>Kumbara</button>
   <button data-go="add"><span class="i">➕</span>Ekle</button>
+  <button data-go="stats"><span class="i">📊</span>İstatistik</button>
   <button data-go="badges"><span class="i">🏅</span>Rozetler</button>
   <button data-go="history"><span class="i">📒</span>Defter</button>
   <button data-go="settings"><span class="i">⚙️</span>Ayarlar</button>
@@ -609,7 +632,16 @@ function renderHome(st){
     <p class="small muted" style="margin:6px 0 8px">Yemekleri yazılmış ama kapatılmamış. Eksik bir şey yoksa kapat, kumbaraya girsin.</p>
     ${st.unclosed.slice(-5).map(d=>`<div class="line"><span>${trDate(d,{weekday:'short',day:'numeric',month:'long'})}</span><span><button class="btn sm" data-go="history">Bak</button> <button class="btn sm primary" data-close="${d}">Kapat</button></span></div>`).join('')}</div>`:'';
   $('#hero').innerHTML=`<div class="hero">${ring(st.total/s.goal)}
-    <div><div class="muted small">Kumbarada</div><div class="big">${fmt(st.total)}</div><div class="muted">/ ${fmt(s.goal)} kcal</div><span class="pct">%${fmt1(100*st.total/s.goal)}</span></div></div>
+    <div><div class="muted small">Kumbarada</div><div class="big">${fmt(st.total)}</div><div class="muted">/ ${fmt(s.goal)} kcal</div><span class="pct">%${fmt1(100*st.total/s.goal)}</span></div>
+    <div class="hero-side">
+      <div><div class="row"><span class="lbl">🎯 Bugünün hedefi${T.closed?' · ✅':''}</span><span class="lbl">${fmt(s.dailyTarget)} kcal</span></div>
+        <div class="val ${T.deficit<0?'red':T.deficit>=s.dailyTarget?'green':''}">${sgn(T.deficit)} <small>/ ${fmt(s.dailyTarget)}</small></div>
+        <div class="bar"><i class="${T.deficit<0?'neg':''}" style="width:${T.deficit<0?100:Math.min(100,100*T.deficit/s.dailyTarget)}%"></i></div>
+        <div class="lbl">${T.closed?(T.deficit>=s.dailyTarget?'Hedef tuttu 👏':'Gün kapandı'):T.deficit>=s.dailyTarget?(T.hasFood?'Şimdilik hedefin üstündesin':'Yemek yazılınca düşecek'):`Hedefe ${fmt(s.dailyTarget-T.deficit)} kcal var`}</div></div>
+      <div><div class="lbl">📅 Kalan ortalama</div>
+        <div class="val">${fmt(st.required)} <small>kcal/gün</small></div>
+        <div class="lbl">${fmt(st.remaining)} kcal ÷ ${fmt(st.daysLeft)} gün${st.required<=s.dailyTarget?' · planın altında 🟢':' · planın üstünde 🔴'}</div></div>
+    </div></div>
     <div class="kpis"><div><b>${fmt(st.remaining)}</b><span>kalan kcal</span></div><div><b>${st.nDays}.</b><span>gün / 365</span></div><div><b>${fmt1(st.fatG/1000)}</b><span>kg yağ eşdeğeri</span></div></div>`;
 
   const w=Math.max(0,Math.min(100,100*T.deficit/s.dailyTarget));
@@ -694,11 +726,104 @@ function fillFoodUI(){
   $('#freqChips').innerHTML=top.map(n=>`<button type="button" class="chip" data-freq="${esc(n)}">${esc(n)}</button>`).join('');
 }
 
+/* ---------- istatistik ---------- */
+let statRange='30', statShowAll=false;
+const WD=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+const wdIdx=d=>{const [y,m,dd]=parts(d);return (new Date(y,m,dd).getDay()+6)%7;};
+const mondayOf=d=>addDays(d,-wdIdx(d));
+function statBars(days,target){
+  const W=340,H=130,P={l:6,r:6,t:8,b:18},n=Math.max(days.length,7),M=Math.max(target*1.25,...days.map(p=>Math.abs(p.closed?p.deficit:0)));
+  const bw=(W-P.l-P.r)/n, zero=H-P.b-(H-P.t-P.b)*0.2, sc=v=>(zero-P.t)*v/M;
+  const bars=days.map((p,i)=>{const X=P.l+(n-days.length+i)*bw+(bw>4?1:0), w=Math.max(1,bw-(bw>4?2:0));
+    if(!p.closed) return p.hasFood?`<rect x="${X}" y="${zero-3}" width="${w}" height="3" style="fill:var(--muted)"/>`:'';
+    const h=sc(Math.abs(p.deficit));
+    return p.deficit>=0?`<rect x="${X}" y="${zero-h}" width="${w}" height="${h}" rx="2" style="fill:${p.deficit>=target?'var(--green)':'var(--gold)'}"><title>${p.d}: ${sgn(p.deficit)}</title></rect>`
+      :`<rect x="${X}" y="${zero}" width="${w}" height="${Math.min(h,H-P.b-zero)}" rx="2" style="fill:var(--red)"><title>${p.d}: ${sgn(p.deficit)}</title></rect>`;}).join('');
+  const f=days[0],l=days[days.length-1];
+  return `<svg viewBox="0 0 ${W} ${H}" class="chart"><line x1="${P.l}" x2="${W-P.r}" y1="${zero-sc(target)}" y2="${zero-sc(target)}" style="stroke:var(--blue)" stroke-dasharray="3 3"/><line x1="${P.l}" x2="${W-P.r}" y1="${zero}" y2="${zero}" style="stroke:var(--line)"/>${bars}
+    ${f?`<text class="t" x="${P.l+(n-days.length)*bw}" y="${H-4}">${trDate(f.d,{day:'numeric',month:'short'})}</text><text class="t" x="${W-P.r}" y="${H-4}" text-anchor="end">${trDate(l.d,{day:'numeric',month:'short'})}</text>`:''}</svg>
+    <div class="legend"><span><i style="background:var(--green)"></i>hedef tuttu</span><span><i style="background:var(--gold)"></i>artı</span><span><i style="background:var(--red)"></i>eksi</span><span><i style="background:var(--blue)"></i>${fmt(target)} hedef</span></div>`;
+}
+function groupRows(days,keyFn,labelFn,target){
+  const g=new Map(); for(const p of days){ const k=keyFn(p.d); if(!g.has(k)) g.set(k,[]); g.get(k).push(p); }
+  return [...g.entries()].reverse().map(([k,ps])=>{ const c=ps.filter(p=>p.closed), sum=c.reduce((a,p)=>a+p.deficit,0);
+    return `<tr><td>${labelFn(k,ps)}</td><td>${c.length}/${ps.length}</td><td class="${sum<0?'red':'gold'}">${sgn(sum)}</td><td>${c.length?fmt(sum/c.length):'—'}</td><td>${c.filter(p=>p.deficit>=target).length}</td></tr>`; }).join('');
+}
+function renderStats(st){
+  const s=st.s, all=st.series, days=statRange==='all'?all:all.slice(-(+statRange)), C=days.filter(p=>p.closed), tgt=s.dailyTarget;
+  const sum=C.reduce((a,p)=>a+p.deficit,0), hit=C.filter(p=>p.deficit>=tgt).length, neg=C.filter(p=>p.deficit<0).length;
+  const best=C.reduce((b,p)=>!b||p.deficit>b.deficit?p:b,null), worst=C.reduce((b,p)=>!b||p.deficit<b.deficit?p:b,null);
+  const avgOf=f=>C.length?C.reduce((a,p)=>a+f(p),0)/C.length:null;
+  const kmT=days.reduce((a,p)=>a+p.footKm,0), stepsT=days.reduce((a,p)=>a+p.steps,0);
+  const K=(l,v,sub='',cls='')=>`<div><div class="lbl">${l}</div><div class="val ${cls}">${v}</div>${sub?`<div class="sub">${sub}</div>`:''}</div>`;
+  const dd=p=>trDate(p.d,{day:'numeric',month:'short'});
+  let h=`<div class="card"><h2>Özet · ${statRange==='all'?'başlangıçtan beri':`son ${statRange} gün`}</h2><div class="kgrid">
+    ${K('Kumbaraya giren',sgn(sum),'kcal',sum<0?'red':'gold')}
+    ${K('Kapatılan gün',`${C.length} / ${days.length}`,days.length-C.length?`${days.length-C.length} gün açık`:'eksiksiz 👏')}
+    ${K('Günlük ortalama',C.length?sgn(sum/C.length):'—','kcal · kapalı günler')}
+    ${K('Hedefi tutan gün',`${hit}`,C.length?`%${fmt(100*hit/C.length)} · eksi gün ${neg}`:'')}
+    ${K('En iyi gün',best?sgn(best.deficit):'—',best?dd(best):'','green')}
+    ${K('En zor gün',worst?sgn(worst.deficit):'—',worst?dd(worst):'',worst&&worst.deficit<0?'red':'')}
+    ${K('Ort. harcanan',avgOf(p=>p.burn)!=null?fmt(avgOf(p=>p.burn)):'—','kcal/gün')}
+    ${K('Ort. alınan',avgOf(p=>p.intakeAdj)!=null?fmt(avgOf(p=>p.intakeAdj)):'—','kcal/gün · pay dahil')}
+    ${K('Yürüyüş / koşu',fmt1(kmT)+' km',fmt(stepsT)+' adım')}
+    ${K('Yağ eşdeğeri',fmt1(Math.max(0,sum)/7700)+' kg','bu dönemde')}
+  </div></div>`;
+  h+=`<div class="card"><h2>Günlük net açık</h2>${days.length?statBars(days,tgt):'<p class="muted">Veri yok.</p>'}</div>`;
+
+  const rows=[...days].reverse(), lim=statShowAll?rows.length:Math.min(rows.length,31);
+  h+=`<div class="card"><div class="row"><h2>Gün gün</h2><button class="btn sm ghost" id="csvBtn">⬇️ CSV</button></div><div class="tblwrap"><table class="stbl">
+    <tr><th>Gün</th><th>Harcanan</th><th>Alınan</th><th>Net</th><th>Kumbara</th></tr>
+    ${rows.slice(0,lim).map(p=>{const empty=!p.closed&&!p.hasFood&&!state.entries.some(e=>e.date===p.d&&e.type!=='close');
+      return `<tr class="${p.closed?'':empty?'empty':'open'}"><td>${p.closed?(p.deficit>=tgt?'🎯':p.deficit<0?'🔻':'✅'):'⏳'} ${trDate(p.d,{weekday:'short',day:'numeric',month:'short'})}</td>
+      <td>${fmt(p.burn)}</td><td>${p.hasFood?fmt(p.intakeAdj):'—'}</td><td class="${p.deficit<0?'red':p.closed&&p.deficit>=tgt?'green':''}">${sgn(p.deficit)}</td><td>${fmt(p.cum)}</td></tr>`;}).join('')}
+  </table></div>${rows.length>lim?`<button class="btn ghost full tblmore" id="showAllDays">Tümünü göster (${rows.length} gün)</button>`:''}
+  <p class="muted small" style="margin-top:8px">🎯 hedef tuttu · ✅ kapandı · 🔻 eksi gün · ⏳ açık (kumbaraya girmedi). Soluk satırların net değeri anlık tahmindir.</p></div>`;
+
+  h+=`<div class="card"><h2>Haftalar</h2><div class="tblwrap"><table class="stbl"><tr><th>Hafta</th><th>Kapalı</th><th>Toplam</th><th>Ort./gün</th><th>🎯</th></tr>
+    ${groupRows(days,mondayOf,k=>trDate(k,{day:'numeric',month:'short'})+' →',tgt)}</table></div></div>`;
+  if(statRange==='all') h+=`<div class="card"><h2>Aylar</h2><div class="tblwrap"><table class="stbl"><tr><th>Ay</th><th>Kapalı</th><th>Toplam</th><th>Ort./gün</th><th>🎯</th></tr>
+    ${groupRows(days,d=>d.slice(0,7),k=>trDate(k+'-01',{month:'long',year:'numeric'}),tgt)}</table></div></div>`;
+
+  // haftanın günleri
+  const wd=WD.map(()=>({n:0,s:0})); for(const p of C){ const i=wdIdx(p.d); wd[i].n++; wd[i].s+=p.deficit; }
+  const wmax=Math.max(1,...wd.map(x=>x.n?Math.abs(x.s/x.n):0));
+  h+=`<div class="card"><h2>Haftanın günleri</h2>${wd.map((x,i)=>{const a=x.n?x.s/x.n:null;
+    return `<div class="line"><span style="width:38px">${WD[i]}</span><span style="flex:1;margin:0 10px"><div class="bar" style="margin:0"><i class="${a<0?'neg':''}" style="width:${a==null?0:100*Math.abs(a)/wmax}%"></i></div></span><b style="min-width:70px;text-align:right" class="${a<0?'red':''}">${a==null?'—':sgn(a)}</b></div>`}).join('')}
+    <p class="muted small" style="margin-top:8px">Kapalı günlerin ortalaması. Hangi gün zorlandığını burada görürsün.</p></div>`;
+
+  // öğünler ve yiyecekler
+  const dset=new Set(C.filter(p=>p.hasFood).map(p=>p.d)), eats=state.entries.filter(e=>e.type==='eat'&&dset.has(e.date));
+  const extras=state.entries.filter(e=>(e.type==='extra'||e.type==='withdraw')&&dset.has(e.date));
+  if(dset.size){
+    const ml=Object.entries(MEALS).map(([k,l])=>[l,eats.filter(e=>(e.meal||'ara')===k).reduce((a,e)=>a+(+e.kcal||0),0)/dset.size]);
+    const ex=extras.reduce((a,e)=>a+intakeOf(e),0)/dset.size, tot=ml.reduce((a,x)=>a+x[1],0)+ex||1;
+    const foods=new Map(); for(const e of eats){ const f=foods.get(e.food)||{n:0,k:0}; f.n++; f.k+=+e.kcal||0; foods.set(e.food,f); }
+    const top=[...foods.entries()].sort((a,b)=>b[1].k-a[1].k).slice(0,10);
+    h+=`<div class="card"><h2>Öğün dağılımı</h2>${[...ml,['🎉 Ekstra',ex]].map(([l,v])=>`<div class="line"><span>${l}</span><span><b>${fmt(v)}</b> <span class="muted small">kcal/gün · %${fmt(100*v/tot)}</span></span></div>`).join('')}
+      <h2 style="margin-top:16px">En çok kalori getiren 10 yiyecek</h2><div class="tblwrap"><table class="stbl"><tr><th>Yiyecek</th><th>Kez</th><th>Toplam kcal</th></tr>
+      ${top.map(([n,f])=>`<tr><td>${esc(n)}</td><td>${f.n}</td><td>${fmt(f.k)}</td></tr>`).join('')}</table></div>
+      <p class="muted small" style="margin-top:8px">Etiketteki ham değerler; hesaptaki %${fmt((s.foodCaution-1)*100)} güvenlik payı hariç.</p></div>`;
+  }
+  // aktiviteler
+  const dall=new Set(days.map(p=>p.d)), acts=new Map();
+  for(const e of state.entries) if(e.type==='activity'&&dall.has(e.date)){ const a=acts.get(e.act)||{n:0,min:0,km:0,k:0}; a.n++; a.min+=+e.min||0; a.km+=+e.km||0; a.k+=+e.kcal||0; acts.set(e.act,a); }
+  if(acts.size) h+=`<div class="card"><h2>Aktiviteler</h2><div class="tblwrap"><table class="stbl"><tr><th>Aktivite</th><th>Kez</th><th>Süre</th><th>km</th><th>kcal</th></tr>
+    ${[...acts.entries()].sort((a,b)=>b[1].k-a[1].k).map(([k,a])=>{const A=ACTS[k]||{n:k,e:'✨'};return `<tr><td>${A.e} ${esc(A.n)}</td><td>${a.n}</td><td>${Math.floor(a.min/60)} sa ${z2(Math.round(a.min%60))} dk</td><td>${a.km?fmt1(a.km):'—'}</td><td>${fmt(a.k)}</td></tr>`}).join('')}</table></div></div>`;
+  $('#statsWrap').innerHTML=h;
+}
+function statsCSV(){ const st=lastSt; if(!st) return;
+  const L=[['tarih','durum','harcanan','alinan_payli','net','kumbara_toplam','adim','yuruyus_km'].join(';')];
+  for(const p of st.series) L.push([p.d,p.closed?'kapali':'acik',Math.round(p.burn),Math.round(p.intakeAdj),Math.round(p.deficit),Math.round(p.cum),p.steps,(Math.round(p.footKm*100)/100).toString().replace('.',',')].join(';'));
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['﻿'+L.join('\n')],{type:'text/csv'})); a.download=`kalori-kumbarasi-${st.today}.csv`; a.click(); URL.revokeObjectURL(a.href); }
+$('#statSeg').addEventListener('click',e=>{const b=e.target.closest('[data-r]'); if(!b) return; statRange=b.dataset.r; statShowAll=false; $$('#statSeg button').forEach(x=>x.classList.toggle('active',x===b)); if(lastSt) renderStats(lastSt);});
+$('#statsWrap').addEventListener('click',e=>{ if(e.target.closest('#csvBtn')) return statsCSV(); if(e.target.closest('#showAllDays')){ statShowAll=true; renderStats(lastSt);} });
+
 let lastSt=null;
 function render(){
   if(!state.ready) return;
   const st=computeStats(); lastSt=st;
-  renderHome(st); renderBadges(st); renderHistory(st); renderCetvel(); renderSettings(); fillFoodUI(); updatePreviews();
+  renderHome(st); renderStats(st); renderBadges(st); renderHistory(st); renderCetvel(); renderSettings(); fillFoodUI(); updatePreviews();
   $('#sync').textContent=backend?.name==='firebase'?(navigator.onLine?'☁️ senkron':'☁️ çevrimdışı'):'📱 yerel';
   try{ const seen=new Set(JSON.parse(localStorage.getItem(SEEN_KEY)||'[]')); const fresh=badges(st).filter(b=>b.done&&!seen.has(b.id));
     if(fresh.length){ fresh.forEach(b=>seen.add(b.id)); localStorage.setItem(SEEN_KEY,JSON.stringify([...seen]));

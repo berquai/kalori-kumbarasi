@@ -1,5 +1,5 @@
 // Kalori Kumbarası service worker — önce ağ, çevrimdışıysa önbellek
-const CACHE = 'kumbara-v4';
+const CACHE = 'kumbara-v5';
 const ASSETS = ['./', './index.html', './manifest.json', './firebase-config.js', './icons/icon-192.png', './icons/icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).catch(() => {})); self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))); self.clients.claim(); });
