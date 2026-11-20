@@ -845,6 +845,7 @@ function renderSettings(){
   const ik=state.settings.inboxKey, pid=(window.FIREBASE_CONFIG||{}).projectId||'kalori-kumbarasi';
   $('#inboxBox').innerHTML=ik?`<p class="small">Bu adres sana özel. Kimseyle paylaşma.</p><p><code id="inboxUrl">https://firestore.googleapis.com/v1/projects/${pid}/databases/(default)/documents/inbox/${ik}/days/</code></p>
     <button class="btn ghost full" id="copyInbox" type="button">Posta kutusu adresini kopyala</button>
+    <button class="btn primary full" id="checkInbox" type="button" style="margin-top:8px">📬 Kutuyu şimdi kontrol et</button>
     <p class="muted small" style="margin-top:8px">${state.inboxErr?`⚠️ Posta kutusu açılamadı (${esc(state.inboxErr)}). Firebase kurallarının güncel olduğundan emin ol.`:state.inboxOk?'✅ Posta kutusu açık ve dinleniyor.':'⏳ Bağlanıyor…'}</p>`
     :'<p class="muted small">Posta kutusu Google ile giriş yapınca oluşur.</p>';
   $('#modeInfo').innerHTML=backend?.name==='firebase'?`☁️ Bulut modu: ${esc(state.user?.email||'')} hesabıyla tüm cihazlarda senkron.`:`📱 Yerel mod: veriler yalnızca bu tarayıcıda. Firebase ayarlanınca cihazlar arası senkron başlar.`;
@@ -1001,16 +1002,22 @@ async function FirebaseBackend(cfg){
     const startInbox=async()=>{ try{
       let key=state.settings.inboxKey;
       if(!key||key.length<20){ const a=new Uint8Array(24); crypto.getRandomValues(a); key=[...a].map(b=>'abcdefghijklmnopqrstuvwxyz0123456789'[b%36]).join(''); await F.setDoc(F.doc(db,'users',me,'meta','settings'),clean(migrate({...state.settings,inboxKey:key}))); }
-      await F.setDoc(F.doc(db,'inbox',key),{uid:me});
-      unsubs.push(F.onSnapshot(F.collection(db,'inbox',key,'days'),snap=>{
-        const docs=snap.docs.map(d=>({id:d.id,q:String(d.data().q||'')})).sort((a,b)=>a.id<b.id?-1:1);
-        for(const d of docs){ const qs=d.q.includes('?')?d.q.slice(d.q.indexOf('?')+1):d.q, r=parseIngest(new URLSearchParams(qs));
-          if(isFinite(r.active)){ const cur=state.entries.find(e=>e.id==='health-'+r.date); if(!cur||!cur.createdAt||!r.at||r.at>=cur.createdAt) be.put(healthEntry(r.date,r.active,r.steps,r.km,'kestirme',r.at)); }
-          F.deleteDoc(F.doc(db,'inbox',key,'days',d.id)).catch(()=>{}); }
+      state.inboxStep='kutu'; await F.setDoc(F.doc(db,'inbox',key),{uid:me});
+      const col=F.collection(db,'inbox',key,'days'), seen=new Set();
+      const handle=async(snapDocs)=>{
+        const docs=snapDocs.map(d=>({id:d.id,q:String(d.data().q||'')})).filter(d=>!seen.has(d.id)).sort((a,b)=>a.id<b.id?-1:1);
+        for(const d of docs){ seen.add(d.id); const qs=d.q.includes('?')?d.q.slice(d.q.indexOf('?')+1):d.q, r=parseIngest(new URLSearchParams(qs));
+          if(isFinite(r.active)){ const cur=state.entries.find(e=>e.id==='health-'+r.date); if(!cur||!cur.createdAt||!r.at||r.at>=cur.createdAt) await be.put(healthEntry(r.date,r.active,r.steps,r.km,'kestirme',r.at)); }
+          F.deleteDoc(F.doc(db,'inbox',key,'days',d.id)).catch(e=>toast('⚠️ Kutu temizlenemedi: '+e.code)); }
         if(docs.length) toast(`📬 Arka planda gelen ${docs.length} saat kaydı işlendi`,4000);
-      },e=>{ state.inboxErr=e.code; render(); }));
-      state.inboxOk=true; render();
-    }catch(e){ state.inboxErr=e.code||e.message; render(); } };
+        return docs.length; };
+      be.checkInbox=async(loud)=>{ try{ const sn=await F.getDocsFromServer?F.getDocsFromServer(col):F.getDocs(col); const n=await handle(sn.docs); state.inboxErr=null; state.inboxOk=true; if(loud&&!n) toast('📭 Kutu boş, yeni kayıt yok.'); render(); }
+        catch(e){ state.inboxErr='okuma: '+(e.code||e.message); render(); if(loud) toast('⚠️ Kutu okunamadı: '+(e.code||e.message),5000); } };
+      state.inboxStep='dinleme';
+      unsubs.push(F.onSnapshot(col,snap=>handle(snap.docs),e=>{ state.inboxErr='dinleme: '+e.code; render(); }));
+      state.inboxOk=true; render(); be.checkInbox(false);
+    }catch(e){ state.inboxErr=(state.inboxStep||'anahtar')+': '+(e.code||e.message); render(); } };
+    if(!be._vis){ be._vis=true; document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&be.checkInbox) be.checkInbox(false); }); }
     unsubs.push(F.onSnapshot(F.collection(db,'users',me,'entries'),snap=>{ state.entries=snap.docs.map(d=>d.data()); gE=true; chk(); },e=>toast('⚠️ Senkron hatası: '+e.code)));
     unsubs.push(F.onSnapshot(F.doc(db,'users',me,'meta','settings'),snap=>{ state.settings=migrate(snap.exists()?snap.data():{}); gS=true; chk(); })); });
   return be;
@@ -1189,6 +1196,7 @@ document.addEventListener('click',e=>{
     $('#cfTitle').textContent=fd.builtin?'Hazır değeri doğrula / düzelt':`“${fd.n}” düzenleniyor`; setTimeout(()=>f.scrollIntoView({behavior:'smooth',block:'start'}),50); return; }
   if(t.dataset.delfood){ if(!confirm(`“${t.dataset.delfood}” cetvelden silinsin mi? (Defterdeki eski kayıtlar etkilenmez.)`)) return; const s={...state.settings}; s.foods=(s.foods||[]).filter(x=>lc(x.n)!==lc(t.dataset.delfood)); backend.saveSettings(s); }
 });
+document.addEventListener('click',e=>{ if(e.target.closest('#checkInbox')){ if(backend&&backend.checkInbox) backend.checkInbox(true); else toast('Posta kutusu henüz bağlanmadı. Google ile giriş yaptığından emin ol.'); } });
 document.addEventListener('click',async e=>{ if(!e.target.closest('#copyInbox')) return; try{ await navigator.clipboard.writeText($('#inboxUrl').textContent); toast('📋 Kopyalandı'); }catch(_){ toast('Kopyalanamadı, elle seç.'); } });
 $('#copyUrl').addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText($('#scUrl').textContent); toast('📋 Kopyalandı'); }catch(e){ toast('Kopyalanamadı, elle seç.'); } });
 $('#expBtn').addEventListener('click',()=>{ const blob=new Blob([JSON.stringify({app:'kalori-kumbarasi',v:2,exported:new Date().toISOString(),settings:state.settings,entries:state.entries},null,1)],{type:'application/json'});
