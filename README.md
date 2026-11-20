@@ -47,8 +47,8 @@ Bu noktada uygulama yerel modda çalışır. Denemek için yeterli.
 6. **URL** eylemi:
    ```
    https://berquai.github.io/kalori-kumbarasi/?d=[Tarih]&aktif=[Aktif]&adim=[Adim]&m=[Metre]
-   Mesafe metre olarak ve ondalıksız gönderilir (`m=14285`). Kestirmeler ondalık virgülü ("14,29") adres ayırıcı sanıp URL'yi böldüğü için `km=` yerine `m=` kullanılır; `km=` hâlâ kabul edilir.
    ```
+   Mesafe metre olarak ve ondalıksız gönderilir (`m=14285`). Kestirmeler ondalık virgülü ("14,29") adres ayırıcı sanıp URL'yi böldüğü için `km=` yerine `m=` kullanılır; `km=` hâlâ kabul edilir.
 7. **URL'leri Aç** (*Open URLs*).
 
 **Otomasyon:** Kestirmeler → Otomasyon → + → **Günün Saati: 22:00, Her Gün** → **Hemen Çalıştır** → *Kumbaraya Gönder*.
