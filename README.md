@@ -59,14 +59,18 @@ Notlar:
 
 ---
 
-## Hesaplama mantığı (neden bu sayılar?)
-- **Saat verisi:** `kumbara = günlük aktif enerji − taban (365 kcal)`. Apple'ın "aktif enerji"si zaten dinlenme metabolizmasını düşer. Taban da programdan önceki 6 aylık günlük ortalaman. Yani yalnızca **bu program sayesinde** fazladan harcanan enerji sayılır (ek katkı ilkesi).
-- **Saat takma alışkanlığı:** Saat yalnızca dışarıdayken takılıyor. Taban (365) da aynı alışkanlıkla ölçüldüğü için çıkarma işlemi tutarlı. Alışkanlık değişirse (ör. saati evde de takmaya başlarsan) tabanı yeniden ölç. Saatin hiç takılmadığı gün kumbaraya 0 yazılır. Evde yapılan kuvvet çalışması ve saatsiz aktiviteler elle girilir; böylece çifte sayım olmaz.
-- **Elle aktivite:** Yürüyüş ve koşu için ACSM metabolik denklemleri (hız + eğim), diğerleri için *Compendium of Physical Activities* MET değerleri. Net kalori `(MET − 1) × kilo × saat × 0,85 temkin katsayısı`. Kilo, biriken kaloriyle kendiliğinden azaltılır.
-- **Yemedim:** `gram × yenmeyen oran × kcal/100 g`. Yiyecek değerleri yaklaşıktır. TürKomp ile doğrulayıp Ayarlar → "Kendi yiyeceğin" bölümünden güncelleyebilirsin.
-- **Çekim:** fazla yenen gün kumbaradan düşülür.
-- **Dinamik tahmin:** günlük yatırımların üstel ağırlıklı ortalaması (varsayılan 14 günlük hafıza). Her girişte yeniden hesaplanır.
-- **1 kg yağ dokusu ≈ 7.700 kcal.** Yağ eşdeğeri yalnızca motivasyon içindir, tartı yerine geçmez.
+## Hesaplama mantığı (v2: tam yemek günlüğü)
+**Kumbara (gün) = Harcanan − Alınan.** Yalnızca **kapatılan** günler kumbaraya girer; ziyafet günü kendiliğinden eksi yazılır.
+
+- **Harcanan** = bazal metabolizma (Mifflin-St Jeor) × yaşam katsayısı (1,2) + (saatin aktif enerjisi − 365 taban) + saatsiz aktiviteler.
+  - Saat yalnızca dışarıda takılıyor. Taban da aynı alışkanlıkla ölçüldüğü için çıkarma işlemi tutarlı. Saat verisi gelmeyen günde saat katkısı −365 sayılır (temkinli varsayım).
+  - Saatsiz aktiviteler (evde kuvvet çalışması vb.): yürüyüş/koşu için ACSM denklemleri, diğerleri için *Compendium of Physical Activities* MET değerleri; net kalori × 0,85 temkin.
+  - Kilo, biriken açıkla kendiliğinden azaltılır (7.700 kcal ≈ 1 kg); tartı gerekmez.
+- **Alınan** = deftere yazılan yemekler + "Ekstra" tahminler, **× 1,10 yemek temkini** (göz kararı yağ, unutulan lokmalar).
+- **Kalori cetveli:** Hazır değerler yaklaşık başlangıç değerleridir ("hazır" etiketi). Cetvelde olmayan bir yiyeceği ilk yazışında tanımlarsın (kcal/100 g ya da 1 birim = kcal, birim gramı, kaynak); sonra hep hazır olur. Hazır bir değeri düzenlediğinde senin doğruladığın kayda dönüşür.
+- **Dinamik tahmin:** kapanan günlerin üstel ağırlıklı ortalaması (14 günlük hafıza). Kapatılmayan gün 0 sayılır.
+- **Güvenlik uyarıları:** günlük açık 1.200 kcal’i geçerse ya da yenen miktar bazal metabolizmanın altında kalırsa.
+- **Tema:** başlıktaki ☀️/🌙 düğmesi ya da Ayarlar → Görünüm (otomatik / açık / koyu).
 
 ## Yedek
 Ayarlar → **Yedek indir** bir JSON dosyası verir. Ayda bir indirmek iyi bir alışkanlık.
