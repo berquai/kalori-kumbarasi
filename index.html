@@ -805,7 +805,8 @@ function renderBadges(st){
 /* ---------- defter ---------- */
 function describe(e){
   const s=state.settings;
-  if(e.type==='health') return {e:'⌚',t:`Saat: ${fmt(e.active)} aktif`,sub:`${fmt(e.steps||0)} adım · ${fmt1(e.km||0)} km`,k:(+e.active||0)-s.baseline,kind:'burn'};
+  if(e.type==='health'){ const at=e.createdAt?new Date(e.createdAt):null, when=at?`${at.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})} ${at.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}`:'';
+    return {e:'⌚',t:`Saat: ${fmt(e.active)} aktif`,sub:`${fmt(e.steps||0)} adım · ${fmt1(e.km||0)} km${when?` · ${e.src==='kestirme'?'📲 kestirme':e.src==='elle'?'✍️ elle':'güncellendi'} ${when}`:''}`,k:(+e.active||0)-s.baseline,kind:'burn'}; }
   if(e.type==='activity'){const A=ACTS[e.act]||{n:e.act,e:'✨'};return {e:A.e,t:`${A.n} · ${fmt(e.min)} dk`,sub:`${e.km?fmt1(e.km)+' km · ':''}${fmt1(e.met)} MET`,k:+e.kcal,kind:'burn'};}
   if(e.type==='eat') return {e:'🍽️',t:e.food,sub:`${MEALS[e.meal]||''} · ${qtyTxt(e)}`,k:e.kcal,kind:'eat'};
   if(e.type==='extra'||e.type==='withdraw') return {e:'🎉',t:`Ekstra: ${e.note||'—'}`,sub:'',k:intakeOf(e),kind:'eat'};
@@ -994,10 +995,10 @@ async function FirebaseBackend(cfg){
 /* ---------- Kestirme ---------- */
 let pendingIngest=null;
 (()=>{ const p=new URLSearchParams(location.search); if(p.has('aktif')||p.has('adim')){ pendingIngest={date:normDate(p.get('d')),active:numSum(p.get('aktif')),steps:Math.round(numSum(p.get('adim')))||0,km:p.has('m')?numSum(p.get('m'))/1000:numSum(p.get('km'))}; history.replaceState(null,'',location.pathname); } })();
-const healthEntry=(date,active,steps,km)=>({id:'health-'+date,date,type:'health',active:Math.round(active||0),steps:steps||0,km:isFinite(km)?Math.round(km*100)/100:0,createdAt:Date.now()});
+const healthEntry=(date,active,steps,km,src='elle')=>({id:'health-'+date,date,type:'health',active:Math.round(active||0),steps:steps||0,km:isFinite(km)?Math.round(km*100)/100:0,src,createdAt:Date.now()});
 function processIngest(){ if(!pendingIngest) return; const p=pendingIngest; pendingIngest=null;
   if(!isFinite(p.active)) return toast('⚠️ Kestirmeden aktif enerji okunamadı.');
-  backend.put(healthEntry(p.date,p.active,p.steps,p.km)); toast(`⌚ ${trDate(p.date,{day:'numeric',month:'long'})}: ${fmt(p.active)} aktif kcal alındı (tabana göre ${sgn(p.active-state.settings.baseline)})`,5000); }
+  backend.put(healthEntry(p.date,p.active,p.steps,p.km,'kestirme')); toast(`⌚ ${trDate(p.date,{day:'numeric',month:'long'})}: ${fmt(p.active)} aktif kcal alındı (tabana göre ${sgn(p.active-state.settings.baseline)})`,5000); }
 
 /* ---------- formlar ---------- */
 function setForm(f){ $$('#formSeg button').forEach(b=>b.classList.toggle('active',b.dataset.f===f)); $$('.frm').forEach(x=>x.style.display=x.id==='f-'+f?'block':'none'); updatePreviews(); }
