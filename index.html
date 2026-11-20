@@ -1000,7 +1000,7 @@ async function FirebaseBackend(cfg){
     /* Arka plan posta kutusu: kestirme tarayıcı açmadan inbox/{anahtar}/days/{zaman} belgesine yazar; uygulama açılınca işleyip siler */
     const startInbox=async()=>{ try{
       let key=state.settings.inboxKey;
-      if(!key){ const a=new Uint8Array(18); crypto.getRandomValues(a); key=[...a].map(b=>'abcdefghijklmnopqrstuvwxyz0123456789'[b%36]).join(''); await F.setDoc(F.doc(db,'users',me,'meta','settings'),clean(migrate({...state.settings,inboxKey:key}))); }
+      if(!key||key.length<20){ const a=new Uint8Array(24); crypto.getRandomValues(a); key=[...a].map(b=>'abcdefghijklmnopqrstuvwxyz0123456789'[b%36]).join(''); await F.setDoc(F.doc(db,'users',me,'meta','settings'),clean(migrate({...state.settings,inboxKey:key}))); }
       await F.setDoc(F.doc(db,'inbox',key),{uid:me});
       unsubs.push(F.onSnapshot(F.collection(db,'inbox',key,'days'),snap=>{
         const docs=snap.docs.map(d=>({id:d.id,q:String(d.data().q||'')})).sort((a,b)=>a.id<b.id?-1:1);
