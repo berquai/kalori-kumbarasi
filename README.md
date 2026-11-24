@@ -1,14 +1,16 @@
-# 🐷 Kalori Kumbarası
+# 🦠 KaloriBank
 
-Bir yılda 250.000 kcal biriktirmek için kişisel kumbara. Tek sayfalık bir web uygulaması (PWA): iPhone'a, Samsung'a ve bilgisayara "uygulama" olarak eklenir. Firebase ile bütün cihazlar aynı kumbarayı görür.
+(Eski adıyla Kalori Kumbarası.) Bir yılda 250.000 kcal biriktirmek için kişisel kalori bankası. Maskotu yeşil, sevimli bir kalori canavarı. Tek sayfalık bir web uygulaması (PWA): iPhone'a, Samsung'a ve bilgisayara "uygulama" olarak eklenir. Firebase ile bütün cihazlar aynı kumbarayı görür.
 
 ## Dosyalar
 | Dosya | Görevi |
 |---|---|
 | `index.html` | Uygulamanın tamamı |
+| `foods.js` | Hazır kalori cetveli: 38 kategoride ~1.270 yiyecek ve içecek (yaklaşık değerler) |
+| `facts.js` | “Biliyor muydun?” ek bilgileri (toplam ~490 madde, her güne bir tane) |
 | `firebase-config.js` | Firebase bilgilerin (doldurulmadıkça uygulama **yerel modda** çalışır) |
 | `firestore.rules` | Veritabanı güvenlik kuralları |
-| `manifest.json`, `sw.js`, `icons/` | Ana ekrana ekleme ve çevrimdışı çalışma |
+| `manifest.json`, `sw.js`, `icons/` | Ana ekrana ekleme ve çevrimdışı çalışma (`icons/app-icon.svg` ikonun kaynağı) |
 
 ---
 
@@ -70,11 +72,16 @@ Notlar:
 - **Alınan** = deftere yazılan yemekler + "Ekstra" tahminler, **× 1,10 yemek temkini** (göz kararı yağ, unutulan lokmalar).
 - **Kalori cetveli:** Hazır değerler yaklaşık başlangıç değerleridir ("hazır" etiketi). Cetvelde olmayan bir yiyeceği ilk yazışında tanımlarsın (kcal/100 g ya da 1 birim = kcal, birim gramı, kaynak); sonra hep hazır olur. Hazır bir değeri düzenlediğinde senin doğruladığın kayda dönüşür.
 - **Günün hedefi** (Ayarlar → Program): *Kalan ortalama* = kalan kcal ÷ kalan gün (varsayılan); *7 günde telafi* = gerideysen eksik önümüzdeki 7 güne yayılır, öndeysen fazlalık kalan güne yayılır (ihtiyatlı, hedef sıfıra düşmez); *Sabit* = kişisel plan. Kişisel plan (800) grafikte ve “Tam yıl temposu” rozetinde referans olarak kalır.
-- **Rozet kademeleri:** anadilimgibi’deki 7 seviyeli madalya tasarımı; her seri kolaydan zora Taş → Bronz → Gümüş → Altın → Platin → Elmas → Efsane. “Kumbara doldu” her zaman Efsane.
+- **Rozet kademeleri:** anadilimgibi’deki 7 seviyeli madalya tasarımı; her seri kolaydan zora Taş → Bronz → … → Efsane. Kolay serilerin tavanı daha alçaktır (ör. kaynak rozetleri en fazla Altın). “Kumbara doldu” her zaman Efsane. Kilitli rozetin altında ilerleme (ör. 9,2 / 10 km) ve rekorun tarihi yazar.
 - **Dondurma hakkı:** seriler haftada 2 eksik günü affeder.
+- **Tatil modu (🧳):** iş seyahati, tatil, hastalık gibi elinde olmayan günler için. Tatil günü hedef yoktur; kumbaradan bir şey düşmez (kapatılırsa gerçek sonucu girer ama kırmızı gösterilmez); seriler bozulmaz ve dondurma hakkı harcanmaz; tempo/ortalama hesabına katılmaz; 365 günlük takvim o kadar gün ileri kayar. Önerilen sınır yılda 30 gün (uyarı verir, engellemez).
+- **Satır üzerinde düzenleme:** ana sayfada ve defterde yenen her kalemin miktarı −/+ ya da kutuya yazarak değişir; kalori kaydın kendi oranıyla yeniden hesaplanır.
 - **Dinamik tahmin:** kapanan günlerin üstel ağırlıklı ortalaması (14 günlük hafıza). Kapatılmayan gün 0 sayılır.
 - **Güvenlik uyarıları:** günlük açık 1.200 kcal’i geçerse ya da yenen miktar bazal metabolizmanın altında kalırsa.
 - **Tema:** başlıktaki ☀️/🌙 düğmesi ya da Ayarlar → Görünüm (otomatik / açık / koyu).
+
+## Bilgisayarda deneme
+`python -m http.server` ile klasörü sun, `http://localhost:8000/?yerel` adresini aç: Firebase yerine tarayıcıda yerel modla çalışır.
 
 ## Yedek
 Ayarlar → **Yedek indir** bir JSON dosyası verir. Ayda bir indirmek iyi bir alışkanlık.

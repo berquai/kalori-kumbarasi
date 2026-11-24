@@ -1,6 +1,6 @@
-// Kalori Kumbarası service worker — önce ağ, çevrimdışıysa önbellek
-const CACHE = 'kumbara-v19';
-const ASSETS = ['./', './index.html', './manifest.json', './firebase-config.js', './icons/icon-192.png', './icons/icon-512.png'];
+// KaloriBank service worker — önce ağ, çevrimdışıysa önbellek
+const CACHE = 'kaloribank-v20';
+const ASSETS = ['./', './index.html', './manifest.json', './firebase-config.js', './foods.js', './facts.js', './icons/icon-192.png', './icons/icon-512.png', './icons/monster.svg'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).catch(() => {})); self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))); self.clients.claim(); });
 self.addEventListener('fetch', e => {
